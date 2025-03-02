@@ -21,10 +21,10 @@ This project demonstrates how to integrate Frontegg's hosted login solution into
 
 Sign up for a Frontegg account in one of our public regions:
 
-- EU ➜ https://portal.frontegg.com/signup
-- US ➜ https://portal.us.frontegg.com/signup
-- CA ➜ https://portal.ca.frontegg.com/signup
-- AU ➜ https://portal.au.frontegg.com/signup
+- EU ➜ <a href="https://portal.frontegg.com/signup" target="_blank">https://portal.frontegg.com/signup</a>
+- US ➜ <a href="https://portal.us.frontegg.com/signup" target="_blank">https://portal.us.frontegg.com/signup</a>
+- CA ➜ <a href="https://portal.ca.frontegg.com/signup" target="_blank">https://portal.ca.frontegg.com/signup</a>
+- AU ➜ <a href="https://portal.au.frontegg.com/signup" target="_blank">https://portal.au.frontegg.com/signup</a>
 
 Complete the initial onboarding form and note down your Client ID and API Key from the Frontegg Portal.
 
@@ -77,11 +77,11 @@ Open your browser and navigate to `http://localhost:3000`. Sign up as a new user
 
 - **Hosted Login with Frontegg**
 
-- **Account Switching and [Entitlements](https://developers.frontegg.com/guides/authorization/entitlements/feature-based/plans)**: Easily switch between different accounts and manage user entitlements.
+- **Account Switching and <a href="https://developers.frontegg.com/guides/authorization/entitlements/feature-based/plans" target="_blank">Entitlements</a>**: Easily switch between different accounts and manage user entitlements.
 - **JWT Token Decoding**: View and decode the JWT token issued to users. Inspect the token's claims.
 - **Copy Values with a Click**: Click on any value to copy it to your clipboard.
-- **[Admin Portal](https://developers.frontegg.com/guides/admin-portal/intro)**: Manage users, SSO connections, and other administrative tasks
-- **[Step-Up MFA](https://developers.frontegg.com/guides/step-up/intro)**: Enhance security by stepping up Multi-Factor Authentication (MFA) for sensitive operations. Learn more about.
+- **<a href="https://developers.frontegg.com/guides/admin-portal/intro" target="_blank">Admin Portal</a>**: Manage users, SSO connections, and other administrative tasks
+- **<a href="https://developers.frontegg.com/guides/step-up/intro" target="_blank">Step-Up MFA</a>**: Enhance security by stepping up Multi-Factor Authentication (MFA) for sensitive operations. Learn more about.
 
 ## Components Overview
 
@@ -98,4 +98,4 @@ Open your browser and navigate to `http://localhost:3000`. Sign up as a new user
 
 ## Support
 
-For any questions or support, please refer to the [Frontegg documentation](https://developers.frontegg.com/guides/getting-started/home) or contact Frontegg support.
+For any questions or support, please refer to the <a href="https://developers.frontegg.com/guides/getting-started/home" target="_blank">Frontegg documentation</a> or contact Frontegg support.
