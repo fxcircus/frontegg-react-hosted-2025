@@ -85,16 +85,19 @@ Open your browser and navigate to `http://localhost:3000`. Sign up as a new user
 
 ## Components Overview
 
-- **App.js**: The main application component.
+- **[App.js](src/App.js)**: The main application component.
 
-- **UserProfile.js**: Displays user profile information, including name, email, and profile picture.
+- **[UserProfile.js](src/components/UserProfile.js)**: Displays user profile information, including name, email, and profile picture.
 
-- **UserInfo.js**: Shows detailed user information, including JWT tokens and user IDs. Allows users to copy values and toggle between encoded and decoded JWT views.
+- **[UserInfo.js](src/components/UserInfo.js)**: Shows detailed user information, including JWT tokens and user IDs. Allows users to copy values and toggle between encoded and decoded JWT views.
 
-- **AccountSwitcher.js**: Provides functionality to switch between different user accounts or tenants.
+- **[AccountSwitcher.js](src/components/AccountSwitcher.js)**: Provides functionality to switch between different user accounts or tenants.
 
-- **EntitlementsInfo.js**: Displays user plans and features.
+- **[EntitlementsInfo.js](src/components/EntitlementsInfo.js)**: Displays user plans and features.
 
+- **[AppInfo.js](src/components/AppInfo.js)**: Provides a brief introduction and welcome message for the application.
+
+- **[ErrorBoundary.js](src/components/ErrorBoundary.js)**: A component that catches JavaScript errors anywhere in the child component tree and displays a fallback UI.
 
 ## Support
 
