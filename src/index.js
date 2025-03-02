@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom'; // For react 17
+import ReactDOM from 'react-dom'; // For React 17
 // For react 18: import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
@@ -7,19 +7,18 @@ import './index.css';
 import { FronteggProvider } from '@frontegg/react';
 
 const contextOptions = {
-  baseUrl: 'https://[YOUR_SUBDOMAIN].frontegg.com', // Login URL (WITHOUT /oauth) from Frontegg Portal ➜ [ENVIRONMENT] ➜ Env Settings page
-  clientId: '[YOUR-CLIENT-ID]',                     // Client ID Frontegg Portal ➜ [ENVIRONMENT] ➜ Env Settings page
-  appId: '[APPLICATION_ID]',   // ID from Frontegg Portal ➜ [ENVIRONMENT] ➜ Applications ➜ Your application
-
+  baseUrl: process.env.REACT_APP_BASE_URL,   // Use environment variable
+  clientId: process.env.REACT_APP_CLIENT_ID, // Use environment variable
+  appId: process.env.REACT_APP_APP_ID,       // Use environment variable
 
   tenantResolver: () => ({
     tenant: new URLSearchParams(window.location.search).get("organization"),
   }),
 };
 
-
 const authOptions = {
- keepSessionAlive: true // refreshes the JWT once it reaches 80% expiration time
+  keepSessionAlive: true,
+  enableSessionPerTenant: true
 };
 
 // For react 18: 

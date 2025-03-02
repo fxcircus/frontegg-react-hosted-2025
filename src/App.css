@@ -40,3 +40,28 @@
 .AdminPortalCustom{
   height: 10%;
 }
+
+.info-layout {
+  display: flex;
+  flex-direction: row; /* Arrange items in a row */
+  justify-content: space-between;
+  width: 100%;
+}
+
+.left-column {
+  /* flex: 1; */
+  margin-right: 20px;
+}
+
+.right-column {
+  flex: 1;
+}
+
+.info-section {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.entitlements-section {
+  margin-top: 20px;
+}

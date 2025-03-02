@@ -1,59 +1,101 @@
-# Frontegg - Hosted Login React integration
+# Frontegg - Hosted Login React Integration
 
-Reference documentation - [Hosted Login Integration (React)](https://docs.frontegg.com/docs/react-hosted-login-guide).
+This project demonstrates how to integrate Frontegg's hosted login solution into a React application. It provides a seamless authentication experience with minimal setup.
 
-## How to run
+## Table of Contents
 
-### Frontegg account setup
-Signup for a Frontegg account on one of our public regions:
+- [Prerequisites](#prerequisites)
+- [Frontegg Account Setup](#frontegg-account-setup)
+- [Code Setup](#code-setup)
+- [Environment Configuration](#environment-configuration)
+- [Running the Application](#running-the-application)
+- [Features](#features)
+- [Components Overview](#components-overview)
+- [Support](#support)
+
+## Prerequisites
+
+- Node.js and npm installed on your machine.
+
+## Frontegg Account Setup
+
+Sign up for a Frontegg account in one of our public regions:
+
 - EU ➜ https://portal.frontegg.com/signup
 - US ➜ https://portal.us.frontegg.com/signup
 - CA ➜ https://portal.ca.frontegg.com/signup
 - AU ➜ https://portal.au.frontegg.com/signup
 
-Come back here once you complete the initial onboarding form
+Complete the initial onboarding form and note down your Client ID and API Key from the Frontegg Portal.
 
-### Code setup
+## Code Setup
 
-1. Clone the repo & install the dependencies
-```
-git clone https://github.com/fxcircus/frontegg-react-demo.git frontegg_react_sample
+1. Clone the repository and install the dependencies:
 
-cd frontegg_react_sample
+   ```bash
+   git clone https://github.com/fxcircus/frontegg-react-demo.git frontegg_sample
+   cd frontegg_sample
+   npm install
+   ```
 
-npm i
-```
+2. Open the project in your preferred IDE:
 
-2. Navigate to `src/index.js` in your IDE or open it from the terminal
-```
-code .
-```
+   ```bash
+   code .
+   ```
 
- Add your Client ID and API Key from `Frontegg Portal ➜ [ENVIRONMENT] ➜ Env Settings page`:
+## Environment Configuration
 
-```
-const contextOptions = {
-  baseUrl: 'https://[YOUR_SUBDOMAIN].frontegg.com', // Login URL (WITHOUT /oauth) from Frontegg Portal ➜ [ENVIRONMENT] ➜ Env Settings page
-  clientId: '[YOUR-CLIENT-ID]',                     // Client ID Frontegg Portal ➜ [ENVIRONMENT] ➜ Env Settings page
-  appId: '[APPLICATION_ID]',   // ID from Frontegg Portal ➜ [ENVIRONMENT] ➜ Applications ➜ Your application
+1. Create a `.env` file in the root directory of the project.
 
+2. Add your Frontegg credentials to the `.env` file:
 
-  tenantResolver: () => ({
-    tenant: new URLSearchParams(window.location.search).get("organization"),
-  }),
-};
-```
-Save the file
+   ```plaintext
+   # Found in the Keys & Domains page
+   REACT_APP_CLIENT_ID=[YOUR-CLIENT-ID]
 
-### Complete the integration
+   # Found in the Applications page under your application
+   REACT_APP_BASE_URL=https://[YOUR_SUBDOMAIN].frontegg.com
+   REACT_APP_APP_ID=[APPLICATION_ID]
+   ```
 
-Run the code from your terminal
-```
+3. Save the file.
+
+## Running the Application
+
+Start the development server:
+
+```bash
 npm start
 ```
 
-Open your browser and navigate to `http://localhost:3000`
+Open your browser and navigate to `http://localhost:3000`. Sign up as a new user and explore the features Frontegg provides out of the box!
 
-Signup as a new user and explore the features Frontegg provides out of the box!
 ![App Screenshot](./images/app_screenshot.png)
 
+## Features
+
+- **Hosted Login with Frontegg**
+
+- **Account Switching and [Entitlements](https://developers.frontegg.com/guides/authorization/entitlements/feature-based/plans)**: Easily switch between different accounts and manage user entitlements.
+- **JWT Token Decoding**: View and decode the JWT token issued to users. Inspect the token's claims.
+- **Copy Values with a Click**: Click on any value to copy it to your clipboard.
+- **[Admin Portal](https://developers.frontegg.com/guides/admin-portal/intro)**: Manage users, SSO connections, and other administrative tasks
+- **[Step-Up MFA](https://developers.frontegg.com/guides/step-up/intro)**: Enhance security by stepping up Multi-Factor Authentication (MFA) for sensitive operations. Learn more about.
+
+## Components Overview
+
+- **App.js**: The main application component.
+
+- **UserProfile.js**: Displays user profile information, including name, email, and profile picture.
+
+- **UserInfo.js**: Shows detailed user information, including JWT tokens and user IDs. Allows users to copy values and toggle between encoded and decoded JWT views.
+
+- **AccountSwitcher.js**: Provides functionality to switch between different user accounts or tenants.
+
+- **EntitlementsInfo.js**: Displays user plans and features.
+
+
+## Support
+
+For any questions or support, please refer to the [Frontegg documentation](https://developers.frontegg.com/guides/getting-started/home) or contact Frontegg support.
