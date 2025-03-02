@@ -95,9 +95,6 @@ Open your browser and navigate to `http://localhost:3000`. Sign up as a new user
 
 - **[EntitlementsInfo.js](src/components/EntitlementsInfo.js)**: Displays user plans and features.
 
-- **[AppInfo.js](src/components/AppInfo.js)**: Provides a brief introduction and welcome message for the application.
-
-- **[ErrorBoundary.js](src/components/ErrorBoundary.js)**: A component that catches JavaScript errors anywhere in the child component tree and displays a fallback UI.
 
 ## Support
 
