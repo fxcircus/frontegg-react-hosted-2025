@@ -32,6 +32,12 @@ function App() {
           <AccountSwitcher />
           <UserInfo />
           <EntitlementsInfo />
+          {/* 
+            The VerifyJWT component is commented out by default.
+            To use it, ensure you have the backend server running.
+            You can clone the server from: 
+            https://github.com/fxcircus/frontegg-JWT-Verify
+          */}
           {/* <VerifyJWT /> */}
         </div>
       ) : (
