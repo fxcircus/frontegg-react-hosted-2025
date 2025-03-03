@@ -96,6 +96,8 @@ Open your browser and navigate to `http://localhost:3000`. Sign up as a new user
 
 - **[EntitlementsInfo.js](src/components/EntitlementsInfo.js)**: Displays user plans and features.
 
+- **[VerifyJWT.js](src/components/VerifyJWT.js)**: Verifies JWT tokens using a backend server.
+
 ## Backend Server
 
 To verify JWT tokens, you can [clone this backend server example](https://github.com/fxcircus/frontegg-JWT-Verify). Follow the instructions in the ReadMe to set up and run the server locally. Then uncomment the [`VerifyJWT` component in the `App.js`](https://github.com/fxcircus/frontegg-react-demo/blob/main/src/App.js#L41) to add it to the UI.
