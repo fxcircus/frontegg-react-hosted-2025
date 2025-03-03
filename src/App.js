@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   useAuth,
   useLoginWithRedirect,
@@ -10,6 +10,7 @@ import AccountSwitcher from './components/AccountSwitcher';
 import UserInfo from './components/UserInfo';
 import EntitlementsInfo from './components/EntitlementsInfo';
 import AppInfo from './components/AppInfo';
+import VerifyJWT from './components/VerifyJWT';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -31,6 +32,7 @@ function App() {
           <AccountSwitcher />
           <UserInfo />
           <EntitlementsInfo />
+          {/* <VerifyJWT /> */}
         </div>
       ) : (
         <div className="login-section">
