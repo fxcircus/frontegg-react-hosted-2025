@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from "@frontegg/react";
+import { useAuth, useStepUp, useIsSteppedUp } from "@frontegg/react";
 import { jwtDecode } from "jwt-decode";
 import "../App.css";
 
@@ -8,6 +8,10 @@ const UserInfo = () => {
   const [showDecodedToken, setShowDecodedToken] = useState(false);
   const [cursorStyle, setCursorStyle] = useState("pointer");
   const [toastMessage, setToastMessage] = useState("");
+
+  const stepUp = useStepUp();
+  const MAX_AGE = 60;
+  const isSteppedUp = useIsSteppedUp({ maxAge: MAX_AGE });
 
   const copyValue = (value) => {
     navigator.clipboard.writeText(value);
@@ -76,6 +80,10 @@ const UserInfo = () => {
   const jwtContainerHoverStyle = {
     ...jwtContainerStyle,
     backgroundColor: "#e0e0e0",
+  };
+
+  const handleStepUp = () => {
+    stepUp({ maxAge: MAX_AGE });
   };
 
   return (
@@ -163,6 +171,19 @@ const UserInfo = () => {
           >
             {user?.tenantId}
           </textarea>
+        </div>
+        <div className="info-section">
+          {/* <label className="info-label">Multi-Factor Authentication</label> */}
+          <p className="info-description">
+            Additional verification step before granting access to restricted app areas.
+          </p>
+          {isSteppedUp ? (
+            <div className="stepped-up-message">You are STEPPED UP!</div>
+          ) : (
+            <button className="action-button" onClick={handleStepUp}>
+              Step up MFA
+            </button>
+          )}
         </div>
       </div>
       {toastMessage && <div className="toast">{toastMessage}</div>}

@@ -21,31 +21,33 @@ const EntitlementsInfo = () => {
 
   return (
     <ErrorBoundary>
-      <label className="info-label">Entitlements</label>
-      <div className="entitlements-section">
-        {isFEntitled && (
-          <div className="entitlement-item">
-            Your plan includes the <b>"{entitlementKey}"</b> feature.
-          </div>
-        )}
-        {isPEntitled && (
-          <div className="entitlement-item">
-            Your plan includes the <b>"{entitlementKey}"</b> permission.
-          </div>
-        )}
-        {isPEntitled2 && (
-          <div className="entitlement-item">
-            You have a permission with the <b>"{entitlementKey}"</b> key.
-          </div>
-        )}
-        {isFEntitled2 && (
-          <div className="entitlement-item">
-            You have a feature with the <b>"{entitlementKey}"</b> key.
-          </div>
-        )}
-        {!hasEntitlement && (
-          <div className="entitlement-item">No plans \ features </div>
-        )}
+      <div>
+        <label className="info-label">Entitlements</label>
+        <div className="entitlements-section">
+          {isFEntitled && (
+            <div className="entitlement-item">
+              Your plan includes the <b>"{entitlementKey}"</b> feature.
+            </div>
+          )}
+          {isPEntitled && (
+            <div className="entitlement-item">
+              Your plan includes the <b>"{entitlementKey}"</b> permission.
+            </div>
+          )}
+          {isPEntitled2 && (
+            <div className="entitlement-item">
+              You have a permission with the <b>"{entitlementKey}"</b> key.
+            </div>
+          )}
+          {isFEntitled2 && (
+            <div className="entitlement-item">
+              You have a feature with the <b>"{entitlementKey}"</b> key.
+            </div>
+          )}
+          {!hasEntitlement && (
+            <div className="entitlement-item">No plans \ features </div>
+          )}
+        </div>
       </div>
     </ErrorBoundary>
   );

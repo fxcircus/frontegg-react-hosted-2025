@@ -6,11 +6,11 @@ import {
 } from "@frontegg/react";
 import UserProfile from './components/UserProfile';
 import ActionButtons from './components/ActionButtons';
-import AccountSwitcher from './components/AccountSwitcher';
 import UserInfo from './components/UserInfo';
 import EntitlementsInfo from './components/EntitlementsInfo';
 import AppInfo from './components/AppInfo';
 import VerifyJWT from './components/VerifyJWT';
+import Navbar from './components/Navbar';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -26,19 +26,13 @@ function App() {
     <div className="App">
       {isAuthenticated ? (
         <div className="user-zone">
-          <AppInfo />
-          <UserProfile />
-          <ActionButtons />
-          <AccountSwitcher />
+          <h1 className="app-title">🥚🥚🥚 Frontegg Demo App 🥚🥚🥚</h1>
+          <Navbar />
           <UserInfo />
-          <EntitlementsInfo />
-          {/* 
-            The VerifyJWT component is commented out by default.
-            To use it, ensure you have the backend server running.
-            You can clone the server from: 
-            https://github.com/fxcircus/frontegg-JWT-Verify
-          */}
-          {/* <VerifyJWT /> */}
+          <div className="info-layout divider">
+            <VerifyJWT /> {/* Ensure you have the backend server running to decode the JWT token. Here is a simple example: https://github.com/fxcircus/frontegg-JWT-Verify*/}
+            <EntitlementsInfo />
+          </div>
         </div>
       ) : (
         <div className="login-section">

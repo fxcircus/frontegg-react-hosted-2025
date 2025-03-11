@@ -72,7 +72,7 @@ npm start
 
 Open your browser and navigate to `http://localhost:3000`. Sign up as a new user and explore the features Frontegg provides out of the box!
 
-![App Screenshot](./images/app_screenshot.png)
+![App Screenshot](./images/app_screenshot_2025.png)
 
 ## Features
 
@@ -88,7 +88,7 @@ Open your browser and navigate to `http://localhost:3000`. Sign up as a new user
 
 - **[App.js](src/App.js)**: The main application component.
 
-- **[UserProfile.js](src/components/UserProfile.js)**: Displays user profile information, including name, email, and profile picture.
+- **[NavBar](src/components/Navbar.js)**: Displays user profile picture, email,  account selector, Admin portal and logout button.
 
 - **[UserInfo.js](src/components/UserInfo.js)**: Shows detailed user information, including JWT tokens and user IDs. Allows users to copy values and toggle between encoded and decoded JWT views.
 

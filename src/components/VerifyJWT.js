@@ -34,7 +34,7 @@ const VerifyJWT = () => {
   };
 
   return (
-    <div className="verify-jwt" style={{ marginTop: '20px' }}>
+    <div className="verify-jwt">
       <button className="action-button" onClick={verifyToken}>Verify JWT</button>
       <textarea
         className="jwt"

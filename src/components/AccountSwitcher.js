@@ -35,7 +35,7 @@ const AccountSwitcher = () => {
   const handleTenantSwitch = (tenant) => {
     setSelectedTenantId(tenant.tenantId);
     setSelectedTenantName(tenant.name);
-    switchTenant({ tenantId: tenant.tenantId });
+    switchTenant({ tenantId: tenant.tenantId, silentReload:true });
     setIsDropdownOpen(false);
   };
 
@@ -45,7 +45,7 @@ const AccountSwitcher = () => {
 
   return (
     <div className="account-switcher">
-      <label className="account-switcher-label">Account Switcher</label>
+      <label>Tenant Selector ➜</label>
       <div className="custom-dropdown" onClick={toggleDropdown} ref={dropdownRef}>
         <div className="dropdown-selected">{selectedTenantName || 'Select Account'}</div>
         {isDropdownOpen && (

@@ -22,7 +22,7 @@ const ActionButtons = () => {
           <div className="stepped-up-message">You are STEPPED UP!</div>
         ) : (
           <button
-            className="action-button"
+            className="action-button step-up-mfa"
             onClick={() => stepUp({ maxAge: MAX_AGE })}
           >
             Step up MFA
@@ -35,7 +35,7 @@ const ActionButtons = () => {
       </div>
       <div className="button-container">
         <button className="action-button" onClick={showAdminPortal}>
-          Open Admin Portal
+          Admin Portal
         </button>
         <p className="button-description">
           Fully self-served, comprehensive set of tools for
