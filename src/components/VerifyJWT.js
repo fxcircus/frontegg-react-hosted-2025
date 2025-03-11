@@ -5,9 +5,13 @@ const VerifyJWT = () => {
   const { user } = useAuth();
   const [verificationResult, setVerificationResult] = useState('');
 
+  // ------------------------------------------------------------
   // Ensure you have a backend service to verify JWT tokens.
   // Sample repository: https://github.com/fxcircus/frontegg-JWT-Verify
-
+  // TODO: Replace with your own backend service URL
+  const serverUrl = 'http://0.0.0.0:8000/';
+  // ------------------------------------------------------------
+  
   const verifyToken = async () => {
     if (!user?.accessToken) {
       console.error("No access token available");
@@ -15,7 +19,7 @@ const VerifyJWT = () => {
     }
 
     try {
-      const response = await fetch('http://0.0.0.0:8000/', {
+      const response = await fetch(serverUrl, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${user.accessToken}`,

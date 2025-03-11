@@ -95,7 +95,7 @@ Open your browser and navigate to `http://localhost:3000`. Sign up as a new user
 
 - **[EntitlementsInfo.js](src/components/EntitlementsInfo.js)**: Displays user \ account plans and features. 
 
-- **[VerifyJWT.js](src/components/VerifyJWT.js)**: Verifies JWT tokens using a backend server.
+- **[VerifyJWT.js](src/components/VerifyJWT.js)**: Verifies JWT tokens using a backend server. Make sure to update the server URL in [line 12](src/components/VerifyJWT.js#L12) to point to your own backend service.
 
 ## Backend Server
 
