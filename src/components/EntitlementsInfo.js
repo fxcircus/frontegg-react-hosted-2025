@@ -5,8 +5,11 @@ import "../index.css";
 import ErrorBoundary from './ErrorBoundary';
 
 const EntitlementsInfo = () => {
+  // ------------------------------------------------------------
+  // TODO: Replace with the entitlement key from your app
+  // Documentation: https://developers.frontegg.com/sdks/frontend/react/entitlements#react-hooks
   const entitlementKey = "test";
-
+  // ------------------------------------------------------------
   const featureEntitlements = useFeatureEntitlements(entitlementKey);
   const permissionEntitlements = usePermissionEntitlements(entitlementKey);
   const entitlementsByPermission = useEntitlements({ permissionKey: entitlementKey });
@@ -22,7 +25,7 @@ const EntitlementsInfo = () => {
   return (
     <ErrorBoundary>
       <div>
-        <label className="info-label">Entitlements</label>
+        <label className="info-label">Plans and Features</label>
         <div className="entitlements-section">
           {isFEntitled && (
             <div className="entitlement-item">
@@ -47,6 +50,18 @@ const EntitlementsInfo = () => {
           {!hasEntitlement && (
             <div className="entitlement-item">No plans \ features </div>
           )}
+        </div>
+        <div className="entitlements-doc">
+          <p>
+            Learn more about plans and features in the&nbsp;
+            <a
+              href="https://developers.frontegg.com/guides/authorization/entitlements/intro"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Frontegg Documentation
+            </a>.
+          </p>
         </div>
       </div>
     </ErrorBoundary>
