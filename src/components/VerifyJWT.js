@@ -5,6 +5,9 @@ const VerifyJWT = () => {
   const { user } = useAuth();
   const [verificationResult, setVerificationResult] = useState('');
 
+  // Ensure you have a backend service to verify JWT tokens.
+  // Sample repository: https://github.com/fxcircus/frontegg-JWT-Verify
+
   const verifyToken = async () => {
     if (!user?.accessToken) {
       console.error("No access token available");
@@ -22,13 +25,17 @@ const VerifyJWT = () => {
 
       const text = await response.text();
       if (!response.ok) {
-        throw new Error(`Failed to verify JWT: ${text}`);
+        throw new Error(`Failed to verify JWT: ${text}.`);
       }
 
       setVerificationResult(text); // Display the text response
       console.log('JWT verified:', text);
     } catch (error) {
-      setVerificationResult(error.message);
+      if (error.message === 'Failed to fetch') {
+        setVerificationResult('Unable to connect to the server. Do you have a backend service that checks the token? Refer to the sample repository: https://github.com/fxcircus/frontegg-JWT-Verify');
+      } else {
+        setVerificationResult(error.message);
+      }
       console.error('Error verifying JWT:', error);
     }
   };
