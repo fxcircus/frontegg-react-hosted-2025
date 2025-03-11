@@ -12,7 +12,6 @@ This project demonstrates how to integrate Frontegg's hosted login solution into
 - [Features](#features)
 - [Components Overview](#components-overview)
 - [Backend Server](#backend-server)
-- [Support](#support)
 
 ## Prerequisites
 
@@ -94,14 +93,10 @@ Open your browser and navigate to `http://localhost:3000`. Sign up as a new user
 
 - **[AccountSwitcher.js](src/components/AccountSwitcher.js)**: Provides functionality to switch between different user accounts or tenants.
 
-- **[EntitlementsInfo.js](src/components/EntitlementsInfo.js)**: Displays user plans and features.
+- **[EntitlementsInfo.js](src/components/EntitlementsInfo.js)**: Displays user \ account plans and features. 
 
 - **[VerifyJWT.js](src/components/VerifyJWT.js)**: Verifies JWT tokens using a backend server.
 
 ## Backend Server
 
-To verify JWT tokens, you can [clone this backend server example](https://github.com/fxcircus/frontegg-JWT-Verify). Follow the instructions in the ReadMe to set up and run the server locally. Then uncomment the [`VerifyJWT` component in the `App.js`](https://github.com/fxcircus/frontegg-react-demo/blob/main/src/App.js#L41) to add it to the UI.
-
-## Support
-
-For any questions or support, please refer to the <a href="https://developers.frontegg.com/guides/getting-started/home" target="_blank">Frontegg documentation</a> or contact Frontegg support.
+To verify JWT tokens, you can [clone this backend server example](https://github.com/fxcircus/frontegg-JWT-Verify). Follow the instructions in the ReadMe to set up and run the server locally.
