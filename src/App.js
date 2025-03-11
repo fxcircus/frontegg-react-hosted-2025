@@ -30,7 +30,7 @@ function App() {
           <Navbar />
           <UserInfo />
           <div className="info-layout divider">
-            <VerifyJWT /> {/* Ensure you have the backend server running to decode the JWT token. Here is a simple example: https://github.com/fxcircus/frontegg-JWT-Verify*/}
+            <VerifyJWT /> {/* Ensure you have the backend server running to decode the JWT token. Here is a simple example: https://github.com/fxcircus/frontegg-JWT-Verify */}
             <EntitlementsInfo />
           </div>
         </div>
