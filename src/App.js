@@ -4,11 +4,9 @@ import {
   useAuth,
   useLoginWithRedirect,
 } from "@frontegg/react";
-import UserProfile from './components/UserProfile';
-import ActionButtons from './components/ActionButtons';
+
 import UserInfo from './components/UserInfo';
 import EntitlementsInfo from './components/EntitlementsInfo';
-import AppInfo from './components/AppInfo';
 import VerifyJWT from './components/VerifyJWT';
 import Navbar from './components/Navbar';
 

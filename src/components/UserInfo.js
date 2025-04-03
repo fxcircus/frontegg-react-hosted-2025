@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth, useStepUp, useIsSteppedUp } from "@frontegg/react";
+import { useAuth, useStepUp, useIsSteppedUp, ContextHolder } from "@frontegg/react";
 import { jwtDecode } from "jwt-decode";
 import "../App.css";
 

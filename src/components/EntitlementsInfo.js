@@ -4,21 +4,47 @@ import "../App.css";
 import "../index.css";
 import ErrorBoundary from './ErrorBoundary';
 
+// Default entitlements object when none are provided.
+const fallbackEntitlements = { isEntitled: false, list: [] };
+
+// Custom hook to safely handle Frontegg entitlement hooks
+const useSafeEntitlement = (hook, ...args) => {
+  try {
+    const result = hook(...args);
+    return result ?? fallbackEntitlements;
+  } catch (error) {
+    console.error('Error in entitlement hook:', error);
+    return fallbackEntitlements;
+  }
+};
+
 const EntitlementsInfo = () => {
   // ------------------------------------------------------------
-  // TODO: Replace with the entitlement key from your app
-  // Documentation: https://developers.frontegg.com/sdks/frontend/react/entitlements#react-hooks
+  // Replace with the entitlement key from your app
+  // See https://developers.frontegg.com/sdks/frontend/react/entitlements for details.
   const entitlementKey = "test";
   // ------------------------------------------------------------
-  const featureEntitlements = useFeatureEntitlements(entitlementKey);
-  const permissionEntitlements = usePermissionEntitlements(entitlementKey);
-  const entitlementsByPermission = useEntitlements({ permissionKey: entitlementKey });
-  const entitlementsByFeature = useEntitlements({ featureKey: entitlementKey });
 
-  const isFEntitled = featureEntitlements?.isEntitled || false;
-  const isPEntitled = permissionEntitlements?.isEntitled || false;
-  const isPEntitled2 = entitlementsByPermission?.isEntitled || false;
-  const isFEntitled2 = entitlementsByFeature?.isEntitled || false;
+  console.log('Before hooks');
+  
+  // Use our safe wrapper for each hook
+  const featureEntitlements = useSafeEntitlement(useFeatureEntitlements, entitlementKey);
+  const permissionEntitlements = useSafeEntitlement(usePermissionEntitlements, entitlementKey);
+  const entitlementsByPermission = useSafeEntitlement(useEntitlements, { permissionKey: entitlementKey });
+  const entitlementsByFeature = useSafeEntitlement(useEntitlements, { featureKey: entitlementKey });
+
+  console.log('Processed Entitlements:', {
+    featureEntitlements,
+    permissionEntitlements,
+    entitlementsByPermission,
+    entitlementsByFeature
+  });
+
+  // Directly use the returned object properties.
+  const isFEntitled = featureEntitlements.isEntitled;
+  const isPEntitled = permissionEntitlements.isEntitled;
+  const isPEntitled2 = entitlementsByPermission.isEntitled;
+  const isFEntitled2 = entitlementsByFeature.isEntitled;
 
   const hasEntitlement = isFEntitled || isPEntitled || isPEntitled2 || isFEntitled2;
 
@@ -48,7 +74,7 @@ const EntitlementsInfo = () => {
             </div>
           )}
           {!hasEntitlement && (
-            <div className="entitlement-item">No plans \ features </div>
+            <div className="entitlement-item">No plans / features</div>
           )}
         </div>
         <div className="entitlements-doc">
@@ -68,4 +94,4 @@ const EntitlementsInfo = () => {
   );
 };
 
-export default EntitlementsInfo; 
+export default EntitlementsInfo;
