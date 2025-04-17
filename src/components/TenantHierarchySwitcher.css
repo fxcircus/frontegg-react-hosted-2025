@@ -1,0 +1,132 @@
+.tenant-hierarchy-switcher {
+  width: 100%;
+  background-color: var(--white-color, #fff);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.hierarchy-title {
+  margin: 0;
+  padding: 15px 20px;
+  background-color: var(--primary-color, #1976d2);
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.hierarchy-container {
+  padding: 15px;
+}
+
+.hierarchy-tree {
+  font-size: 14px;
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid var(--light-gray-color, #ddd);
+  border-radius: 4px;
+  background-color: var(--white-color, #fff);
+}
+
+.hierarchy-node {
+  width: 100%;
+}
+
+.hierarchy-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid var(--light-gray-color, #eee);
+}
+
+.hierarchy-item:last-child {
+  border-bottom: none;
+}
+
+.hierarchy-item:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.hierarchy-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  color: var(--secondary-color, #666);
+}
+
+.expand-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: inherit;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.expand-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.placeholder-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.tenant-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  transition: color 0.2s;
+}
+
+.tenant-button:hover {
+  color: var(--primary-color, #1976d2);
+}
+
+.current-tenant {
+  font-weight: 500;
+  background-color: rgba(25, 118, 210, 0.08);
+  border-left: 3px solid var(--primary-color, #1976d2);
+}
+
+.hierarchy-children {
+  width: 100%;
+  border-left: 1px dashed var(--light-gray-color, #ddd);
+  margin-left: 10px;
+}
+
+.hierarchy-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: var(--secondary-color, #666);
+}
+
+.hierarchy-error {
+  padding: 20px;
+  text-align: center;
+  color: var(--error-color, #dc3545);
+  background-color: rgba(220, 53, 69, 0.05);
+  border-radius: 4px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} 

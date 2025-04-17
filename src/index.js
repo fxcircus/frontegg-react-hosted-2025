@@ -21,6 +21,8 @@ const authOptions = {
   enableSessionPerTenant: true
 };
 
+const localizations = {}
+
 // For react 18: 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
@@ -30,6 +32,7 @@ ReactDOM.render(
       hostedLoginBox={true}
       authOptions={authOptions}
       entitlementsOptions={{ enabled: true }}
+      localizations={localizations}
     >
         <App />
     </FronteggProvider>,

@@ -18,6 +18,9 @@ const AccountSwitcher = () => {
       if (currentTenant) {
         setSelectedTenantId(currentTenant.tenantId);
         setSelectedTenantName(currentTenant.name);
+        
+        // Log tenant metadata to see what's available
+        console.log("Current Tenant Metadata:", currentTenant);
       }
     }
   }, [tenants, user?.tenantId]);

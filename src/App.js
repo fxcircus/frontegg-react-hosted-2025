@@ -9,6 +9,7 @@ import UserInfo from './components/UserInfo';
 import EntitlementsInfo from './components/EntitlementsInfo';
 import VerifyJWT from './components/VerifyJWT';
 import Navbar from './components/Navbar';
+import TenantHierarchySwitcher from './components/TenantHierarchySwitcher';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -26,10 +27,17 @@ function App() {
         <div className="user-zone">
           <h1 className="app-title">🥚🥚🥚 Frontegg Demo App 🥚🥚🥚</h1>
           <Navbar />
-          <UserInfo />
-          <div className="info-layout divider">
-            <VerifyJWT /> {/* Ensure you have the backend server running to decode the JWT token. Here is a simple example: https://github.com/fxcircus/frontegg-JWT-Verify */}
-            <EntitlementsInfo />
+          <div className="app-layout">
+            <div className="main-content">
+              <UserInfo />
+              <div className="info-layout divider">
+                <VerifyJWT />
+                <EntitlementsInfo />
+              </div>
+            </div>
+            {/* <div className="sidebar">
+              <TenantHierarchySwitcher title="Tenant Hierarchy" />
+            </div> */}
           </div>
         </div>
       ) : (
