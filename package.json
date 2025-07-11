@@ -1,42 +1,28 @@
 {
-  "name": "entitlements-react-hosted-sample",
-  "version": "0.1.0",
+  "name": "frontegg-rebac-demo",
+  "version": "1.0.0",
+  "description": "Frontegg ReBAC Demo Application",
   "private": true,
-  "dependencies": {
-    "@frontegg/react": "^7.7.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "cors": "^2.8.5",
-    "jwt-decode": "^4.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
   "scripts": {
-    "start": "PORT=3000 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "node scripts/start-all.js",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm start",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:no-docker": "concurrently \"npm run dev:frontend\" \"USE_MOCK_REBAC=true npm run dev:backend\"",
+    "start:frontend": "cd frontend && npm start",
+    "start:backend": "cd backend && npm start",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "docker:up": "cd backend && docker-compose up -d",
+    "docker:down": "cd backend && docker-compose down",
+    "docker:logs": "cd backend && docker-compose logs -f",
+    "docker:status": "cd backend && docker-compose ps",
+    "clean": "npm run docker:down && rm -rf frontend/node_modules backend/node_modules node_modules",
+    "clean:db": "rm -f backend/database.sqlite",
+    "test": "cd frontend && npm test",
+    "build": "cd frontend && npm run build",
+    "health": "curl -s http://localhost:5000/api/health | json_pp || echo 'Backend not running'"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "concurrently": "^8.2.1"
   }
 }

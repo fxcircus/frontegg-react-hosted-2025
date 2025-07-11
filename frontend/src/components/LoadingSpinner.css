@@ -1,0 +1,95 @@
+.loading-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.loading-spinner-container.small {
+  padding: 20px;
+}
+
+.loading-spinner-container.large {
+  padding: 60px;
+}
+
+.loading-spinner {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.small .loading-spinner {
+  width: 24px;
+  height: 24px;
+}
+
+.large .loading-spinner {
+  width: 56px;
+  height: 56px;
+}
+
+.spinner-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(91, 104, 245, 0.2);
+  border-radius: 50%;
+  animation: spinner-rotate 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  background: linear-gradient(to right, transparent, transparent),
+              linear-gradient(45deg, var(--primary-color), var(--primary-light));
+  background-size: 100% 100%, 50% 50%;
+  background-position: center;
+  -webkit-mask: radial-gradient(transparent 40%, #000 41%);
+  mask: radial-gradient(transparent 40%, #000 41%);
+}
+
+.spinner-ring::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--primary-color);
+  animation: spinner-rotate 1.5s linear infinite;
+}
+
+.small .spinner-ring {
+  border-width: 2px;
+}
+
+.large .spinner-ring {
+  border-width: 4px;
+}
+
+.loading-message {
+  margin-top: 16px;
+  color: var(--dark-gray-color);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.small .loading-message {
+  margin-top: 12px;
+  font-size: 0.75rem;
+}
+
+.large .loading-message {
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+@keyframes spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

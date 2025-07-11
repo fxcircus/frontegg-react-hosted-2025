@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth, useStepUp, useIsSteppedUp, ContextHolder } from "@frontegg/react";
 import { jwtDecode } from "jwt-decode";
+import Card from './Card';
+import Toast from './Toast';
 import "../App.css";
 
 const UserInfo = () => {
@@ -89,11 +91,7 @@ const UserInfo = () => {
   return (
     <div className="info-layout">
       <div className="left-column">
-        <div className="info-section">
-          <label className="info-label">User JWT</label>
-          <p className="info-description">
-            The JWT Frontegg issued for this user.
-          </p>
+        <Card title="User JWT" subtitle="The JWT Frontegg issued for this user. Click to copy.">
 
           {showDecodedToken ? (
             <div
@@ -113,6 +111,14 @@ const UserInfo = () => {
               value={user?.accessToken}
               readOnly
               onClick={() => copyValue(user?.accessToken)}
+              aria-label="JWT Token - Click to copy"
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  copyValue(user?.accessToken);
+                }
+              }}
               style={{
                 cursor: cursorStyle,
                 backgroundColor: "#f5f5f5",
@@ -139,54 +145,64 @@ const UserInfo = () => {
               <span className="slider round"></span>
             </label>
           </div>
-        </div>
+        </Card>
       </div>
       <div className="right-column">
-        <div className="info-section">
-          <label className="info-label">User ID</label>
-          <p className="info-description">
-            This is your unique User ID (sub) assigned by Frontegg.
-          </p>
+        <Card title="User ID" subtitle="Your unique User ID (sub) assigned by Frontegg.">
           <textarea
             cols="35"
             readOnly
             onClick={() => copyValue(user?.id)}
+            aria-label="User ID - Click to copy"
+            role="button"
+            tabIndex={0}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                copyValue(user?.id);
+              }
+            }}
             style={{ cursor: cursorStyle }}
           >
             {user?.id}
           </textarea>
-        </div>
-        <div className="info-section">
-          <label className="info-label">Active Account ID</label>
-          <p className="info-description">
-            This is the Account ID (tenantId) that is currently associated
-            with this user. When the user logs in, they will be logged
-            into this account.
-          </p>
+        </Card>
+        <Card title="Active Account ID" subtitle="The Account ID (tenantId) currently associated with this user.">
           <textarea
             cols="35"
             readOnly
             onClick={() => copyValue(user?.tenantId)}
+            aria-label="Tenant ID - Click to copy"
+            role="button"
+            tabIndex={0}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                copyValue(user?.tenantId);
+              }
+            }}
             style={{ cursor: cursorStyle }}
           >
             {user?.tenantId}
           </textarea>
-        </div>
-        <div className="info-section">
-          {/* <label className="info-label">Multi-Factor Authentication</label> */}
-          <p className="info-description">
-            Additional verification step before granting access to restricted app areas.
-          </p>
+        </Card>
+        <Card title="Multi-Factor Authentication" subtitle="Additional verification step before granting access to restricted app areas.">
           {isSteppedUp ? (
             <div className="stepped-up-message">You are STEPPED UP!</div>
           ) : (
-            <button className="action-button" onClick={handleStepUp}>
+            <button 
+              className="action-button" 
+              onClick={handleStepUp}
+              aria-label="Initiate multi-factor authentication step-up"
+            >
               Step up MFA
             </button>
           )}
-        </div>
+        </Card>
       </div>
-      {toastMessage && <div className="toast">{toastMessage}</div>}
+      <Toast 
+        message={toastMessage} 
+        type="success" 
+        onClose={() => setToastMessage('')} 
+      />
     </div>
   );
 };

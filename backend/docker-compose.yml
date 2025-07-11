@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  # Frontegg Entitlements Agent (Required for ReBAC)
+  entitlements-agent:
+    image: frontegg/entitlements-agent:latest
+    container_name: frontegg-entitlements-agent
+    ports:
+      - "8181:8181"
+    environment:
+      - FRONTEGG_CLIENT_CREDENTIALS_OAUTH_CLIENT_ID=${FRONTEGG_CLIENT_ID}
+      - FRONTEGG_CLIENT_CREDENTIALS_OAUTH_CLIENT_SECRET=${FRONTEGG_API_KEY}
+      - FRONTEGG_OAUTH_BASE_URL=${FRONTEGG_BASE_URL}
+      - LOG_LEVEL=info
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8181/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# Note: SQLite is file-based and doesn't require a Docker container
+# The database.sqlite file will be created automatically in the backend directory

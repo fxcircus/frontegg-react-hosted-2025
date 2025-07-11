@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useAuth, useAuthActions, useTenantsState } from "@frontegg/react";
 import { createApiClient } from "@frontegg/rest-api";
+import Card from './Card';
+import LoadingSpinner from './LoadingSpinner';
+import Toast from './Toast';
 import './TenantHierarchySwitcher.css';
 
 // Icons component
@@ -126,6 +129,7 @@ const TenantHierarchySwitcher = ({
   // State management
   const [hierarchyData, setHierarchyData] = useState(null);
   const [isHierarchyLoading, setIsHierarchyLoading] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   
   // Fetch hierarchy data
   useEffect(() => {
@@ -139,6 +143,7 @@ const TenantHierarchySwitcher = ({
     try {
       setIsHierarchyLoading(true);
       const response = await api.tenants.getSubTenantsAsTree();
+      console.log('Tenant Hierarchy API Response:', JSON.stringify(response, null, 2));
       setHierarchyData(response);
     } catch (error) {
       console.error('Error fetching hierarchy data:', error);
@@ -149,6 +154,13 @@ const TenantHierarchySwitcher = ({
   
   // Actions
   const handleTenantSwitch = (tenant) => {
+    if (tenant.tenantId === user?.tenantId) {
+      setToastMessage("You are already on this tenant");
+      return;
+    }
+    
+    setToastMessage(`Switching to ${tenant.name}...`);
+    
     if (onTenantSwitch) {
       onTenantSwitch(tenant);
     } else {
@@ -158,18 +170,14 @@ const TenantHierarchySwitcher = ({
   };
   
   return (
-    <div className={`tenant-hierarchy-switcher ${className || ''}`}>
-      <h3 className="hierarchy-title">{title}</h3>
-      
+    <Card 
+      title={title}
+      subtitle="Navigate through your tenant hierarchy and switch between tenants"
+      className={`tenant-hierarchy-card ${className || ''}`}
+    >
       <div className="hierarchy-container">
         {isHierarchyLoading ? (
-          <div className="hierarchy-loading">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 1s linear infinite', marginRight: '8px' }}>
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 6v6l4 2"></path>
-            </svg>
-            {loadingText}
-          </div>
+          <LoadingSpinner message={loadingText} />
         ) : hierarchyData ? (
           <div className="hierarchy-tree">
             <HierarchyTreeNode 
@@ -178,13 +186,44 @@ const TenantHierarchySwitcher = ({
               user={user}
             />
           </div>
+        ) : tenants && tenants.length > 0 ? (
+          // Fallback to flat list if no hierarchy data
+          <div className="hierarchy-tree">
+            <div className="flat-tenants-list">
+              {tenants.map(tenant => {
+                const isCurrentTenant = tenant.tenantId === user?.tenantId;
+                return (
+                  <div 
+                    key={tenant.tenantId}
+                    className={`hierarchy-item flat-item ${isCurrentTenant ? 'current-tenant' : ''}`}
+                  >
+                    <span className="hierarchy-icon">
+                      <span className="placeholder-icon" />
+                    </span>
+                    <button 
+                      onClick={() => handleTenantSwitch({ tenantId: tenant.tenantId, name: tenant.name })}
+                      className="tenant-button"
+                    >
+                      {tenant.name} {isCurrentTenant && '(current)'}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         ) : (
-          <div className="hierarchy-error">
-            {noDataText}
+          <div className="hierarchy-empty">
+            <p>{noDataText}</p>
           </div>
         )}
       </div>
-    </div>
+      
+      <Toast 
+        message={toastMessage} 
+        type="info" 
+        onClose={() => setToastMessage('')} 
+      />
+    </Card>
   );
 };
 

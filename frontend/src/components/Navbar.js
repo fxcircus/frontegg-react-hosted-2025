@@ -18,7 +18,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar">
+    <nav className="navbar" role="navigation" aria-label="Main navigation">
       <div className="navbar-section">
         <img
           src={user?.profilePictureUrl}
@@ -31,14 +31,22 @@ const Navbar = () => {
       </div>
       <AccountSwitcher />
       <div className="navbar-section">
-        <button className="action-button" onClick={showAdminPortal}>
-          Admin Portal
+        <button 
+          className="action-button" 
+          onClick={showAdminPortal}
+          aria-label="Open self service portal for user management"
+        >
+          Self Service Portal
         </button>
-        <button className="action-button logout-button" onClick={logout}>
+        <button 
+          className="action-button logout-button" 
+          onClick={logout}
+          aria-label="Log out of your account"
+        >
           Logout
         </button>
       </div>
-    </div>
+    </nav>
   );
 };
 

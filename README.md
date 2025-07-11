@@ -1,97 +1,331 @@
-# Frontegg - Hosted Login React Integration
+# Frontegg Demo Application
 
-This project demonstrates how to integrate Frontegg's hosted login solution into a React application. It provides a seamless authentication experience with minimal setup.
+A comprehensive full-stack demo application showcasing Frontegg's authentication, authorization, and enterprise features including Multi-Tenancy, Admin Portal, API Playground, and Relationship-Based Access Control (ReBAC) with a document management system.
 
-## Table of Contents
+## 🚀 Quick Start
 
-- [Prerequisites](#prerequisites)
-- [Frontegg Account Setup](#frontegg-account-setup)
-- [Code Setup](#code-setup)
-- [Environment Configuration](#environment-configuration)
-- [Running the Application](#running-the-application)
-- [Features](#features)
-- [Components Overview](#components-overview)
-
-## Prerequisites
-
-- Node.js and npm installed on your machine.
-
-## Frontegg Account Setup
-
-Sign up for a Frontegg account in one of our public regions:
-
-- EU ➜ <a href="https://portal.frontegg.com/signup" target="_blank">https://portal.frontegg.com/signup</a>
-- US ➜ <a href="https://portal.us.frontegg.com/signup" target="_blank">https://portal.us.frontegg.com/signup</a>
-- CA ➜ <a href="https://portal.ca.frontegg.com/signup" target="_blank">https://portal.ca.frontegg.com/signup</a>
-- AU ➜ <a href="https://portal.au.frontegg.com/signup" target="_blank">https://portal.au.frontegg.com/signup</a>
-
-Complete the initial onboarding form and note down your Client ID and API Key from the Frontegg Portal.
-
-## Code Setup
-
-1. Clone the repository and install the dependencies:
-
-   ```bash
-   git clone https://github.com/fxcircus/frontegg-react-demo.git frontegg_sample
-   cd frontegg_sample
-   npm install
-   ```
-
-2. Open the project in your preferred IDE:
-
-   ```bash
-   code .
-   ```
-
-## Environment Configuration
-
-1. Create a `.env` file in the root directory of the project.
-
-2. Add your Frontegg credentials to the `.env` file:
-
-   ```plaintext
-   # Found in the Keys & Domains page
-   REACT_APP_CLIENT_ID=[YOUR-CLIENT-ID]
-
-   # Found in the Applications page under your application
-   REACT_APP_BASE_URL=https://[YOUR_SUBDOMAIN].frontegg.com
-   REACT_APP_APP_ID=[APPLICATION_ID]
-   ```
-
-3. Save the file.
-
-## Running the Application
-
-Start the development server:
+**New to the project? See our [5-minute Setup Guide](SETUP.md) for step-by-step instructions!**
 
 ```bash
+# 1. Clone and install dependencies
+git clone <repo-url>
+cd leadDev_react_hosted
+npm run install:all
+
+# 2. Configure environment variables (see Setup Instructions below)
+
+# 3. Start everything with one command
 npm start
 ```
 
-Open your browser and navigate to `http://localhost:3000`. Sign up as a new user and explore the features Frontegg provides out of the box!
-
-![App Screenshot](./images/app_screenshot_2025.png)
+The `npm start` command will automatically:
+- ✅ Check prerequisites (Node.js, Docker, environment files)
+- ✅ Start Docker containers (Entitlements Agent for ReBAC) 
+- ✅ Wait for services to be healthy
+- ✅ Launch the backend API server on http://localhost:5000
+- ✅ Launch the React frontend on http://localhost:3000
+- ✅ Handle graceful shutdown on exit
 
 ## Features
 
-- **Hosted Login with Frontegg**
+### Core Authentication & User Management
+- **Hosted Authentication**: Secure login/logout with Frontegg's hosted login
+- **JWT Token Display**: View and decode authentication tokens
+- **User Profile**: Display user details, roles, and permissions
+- **Multi-Factor Authentication**: Step-up authentication support
 
-- **Account Switching and <a href="https://developers.frontegg.com/guides/authorization/entitlements/feature-based/plans" target="_blank">Entitlements</a>**: Easily switch between different accounts and manage user entitlements.
-- **JWT Token Decoding**: View and decode the JWT token issued to users. Inspect the token's claims.
-- **Copy Values with a Click**: Click on any value to copy it to your clipboard.
-- **<a href="https://developers.frontegg.com/guides/admin-portal/intro" target="_blank">Admin Portal</a>**: Manage users, SSO connections, and other administrative tasks
-- **<a href="https://developers.frontegg.com/guides/step-up/intro" target="_blank">Step-Up MFA</a>**: Enhance security by stepping up Multi-Factor Authentication (MFA) for sensitive operations. Learn more about.
+### Multi-Tenancy
+- **Tenant Hierarchy Switcher**: Visual tenant navigation with sub-accounts
+- **Tenant Metadata**: View and manage tenant-specific settings
+- **Tenant Isolation**: Proper data separation between tenants
+- **Account Switching**: Seamless switching between tenant contexts
 
-## Components Overview
+### Admin Portal Components
+- **Embedded User Management**: UsersTable component for team administration
+- **Profile Management**: Embedded ProfilePage for user settings
+- **Security Settings**: ChangePasswordForm for password updates
+- **Self-Service Portal**: Full admin capabilities within your app
 
-- **[App.js](src/App.js)**: The main application component.
+### API Development Tools
+- **API Playground**: Test Frontegg APIs with live authentication
+- **Common Endpoints**: Pre-configured API examples by category
+- **Request Builder**: Custom headers and request body support
+- **cURL Export**: Copy requests as cURL commands
+- **Response Viewer**: Formatted JSON responses with timing
 
-- **[NavBar](src/components/Navbar.js)**: Displays user profile picture, email,  account selector, Admin portal and logout button.
+### Document Management with ReBAC
+- **Create & Manage Documents**: Full CRUD operations
+- **Fine-grained Permissions**: Owner, Editor, and Viewer roles
+- **Document Sharing**: Share with specific users and permissions
+- **Access Control**: Real-time permission validation
+- **Relationship-Based Security**: Powered by Frontegg ReBAC
 
-- **[UserInfo.js](src/components/UserInfo.js)**: Shows detailed user information, including JWT tokens and user IDs. Allows users to copy values and toggle between encoded and decoded JWT views.
+## Architecture
 
-- **[AccountSwitcher.js](src/components/AccountSwitcher.js)**: Provides functionality to switch between different user accounts or tenants.
+```
+leadDev_react_hosted/
+├── frontend/              # React application
+│   ├── src/
+│   │   └── components/
+│   │       └── DocumentManager/  # ReBAC demo components
+│   └── package.json
+├── backend/               # Node.js/Express API
+│   ├── src/
+│   │   ├── controllers/   # API route handlers
+│   │   ├── middleware/    # Auth & ReBAC checks
+│   │   ├── models/        # MongoDB schemas
+│   │   └── services/      # Frontegg integration
+│   ├── docker-compose.yml # Local services
+│   └── package.json
+└── package.json          # Root scripts
+```
 
-- **[EntitlementsInfo.js](src/components/EntitlementsInfo.js)**: Displays plans and features. Make sure to replace the entitlement key [here](src/components/EntitlementsInfo.js#L11) with your app's specific key. Learn more about entitlements in the [Frontegg Documentation](https://developers.frontegg.com/guides/authorization/entitlements/intro).
+## Prerequisites
 
-- **[VerifyJWT.js](src/components/VerifyJWT.js)**: Verifies JWT tokens using a backend server. Make sure to update the server URL [here](src/components/VerifyJWT.js#L12) to point to your own backend service. you can [clone this backend server example](https://github.com/fxcircus/frontegg-JWT-Verify). Follow the instructions in the ReadMe to set up and run the server locally.
+- Node.js 16+ and npm
+- Docker and Docker Compose (for Entitlements Agent only)
+- Frontegg account with ReBAC enabled
+
+## Setup Instructions
+
+### 1. Clone and Install Dependencies
+
+```bash
+# Install all dependencies
+npm run install:all
+```
+
+### 2. Configure Environment Variables
+
+Create `.env` files in both frontend and backend directories:
+
+**backend/.env**
+```env
+# Copy from backend/.env.example
+FRONTEGG_CLIENT_ID=your_client_id
+FRONTEGG_API_KEY=your_api_key
+FRONTEGG_BASE_URL=https://app-xxx.frontegg.com
+PORT=5000
+ENTITLEMENTS_AGENT_URL=http://localhost:8181
+FRONTEND_URL=http://localhost:3000
+```
+
+**frontend/.env**
+```env
+# Copy existing .env and add:
+REACT_APP_BACKEND_URL=http://localhost:5000
+```
+
+### 3. Configure ReBAC in Frontegg Portal
+
+**Important**: ReBAC must be enabled in your Frontegg workspace for document permissions to work.
+
+1. Log into your [Frontegg Portal](https://portal.frontegg.com)
+2. Navigate to: **[ENVIRONMENT]** → **Entitlements** → **ReBAC**
+3. Click **"Configure ReBAC"** or **"Add Configuration"**
+4. Create the following configuration:
+
+#### Entity Configuration:
+1. **Entity Key**: `document`
+2. **Entity Name (Display)**: `Document`
+
+#### Relations (for document entity):
+Add these relations one by one:
+- **Relation Key**: `owner` | **Display Name**: `Owner`
+- **Relation Key**: `editor` | **Display Name**: `Editor`
+- **Relation Key**: `viewer` | **Display Name**: `Viewer`
+
+#### Actions (for document entity):
+Add these actions with their allowed relations:
+1. **Action Key**: `read` | **Display Name**: `Read`
+   - **Allowed Relations**: `viewer`, `editor`, `owner`
+2. **Action Key**: `write` | **Display Name**: `Write`
+   - **Allowed Relations**: `editor`, `owner`
+3. **Action Key**: `delete` | **Display Name**: `Delete`
+   - **Allowed Relations**: `owner`
+4. **Action Key**: `share` | **Display Name**: `Share`
+   - **Allowed Relations**: `owner`
+
+5. Click **Save** to apply the configuration
+
+**Troubleshooting ReBAC Setup**:
+- If you see "403 Forbidden" errors, check that ReBAC is configured correctly
+- The error message will indicate if ReBAC is not enabled: "ReBAC assignment failed (is ReBAC enabled in Frontegg?)"
+- Ensure the Entitlements Agent is running (`docker ps` should show `frontegg-entitlements-agent`)
+
+### 4. Start the Application
+
+**Recommended - Single Command**:
+```bash
+npm start  # Starts Docker, backend, and frontend automatically
+```
+
+**Manual Start (for development)**:
+```bash
+# Terminal 1: Start Docker containers
+npm run docker:up
+
+# Terminal 2: Start backend and frontend
+npm run dev
+
+# Or start them separately:
+npm run dev:frontend  # React app on http://localhost:3000
+npm run dev:backend   # API server on http://localhost:5000
+```
+
+**Without Docker** (ReBAC features will be mocked):
+```bash
+npm run dev:no-docker
+```
+
+**Note**: SQLite database will be created automatically when the backend starts for the first time.
+
+## Using the Application
+
+### Navigation
+The app features a modern sidebar navigation with the following sections:
+
+1. **Dashboard** - Overview with interactive stats cards
+2. **User & Auth** - JWT tokens, user details, and authentication info
+3. **Tenants** - Tenant hierarchy management and metadata
+4. **API Playground** - Test Frontegg APIs interactively
+5. **Embedded Components** - Admin portal features embedded in your UI
+6. **Documents (ReBAC)** - Document management with relationship-based permissions
+
+### Using the ReBAC Demo
+
+1. **Login** with your Frontegg credentials
+2. Navigate to **Documents (ReBAC)** in the sidebar
+3. **Create a document** - You'll automatically become the owner
+4. **Share documents** with other users:
+   - Click the share icon (🔗) on a document
+   - Enter the user's email or ID
+   - Choose permission level (viewer or editor)
+5. **Test permissions** by logging in as different users
+
+## ReBAC Permission Model
+
+### Relationships
+- **Owner**: Full control (read, write, delete, share)
+- **Editor**: Can read and modify content
+- **Viewer**: Read-only access
+
+### Permission Checks
+The backend validates permissions on every request using Frontegg's Entitlements Agent:
+
+```javascript
+// Example permission check
+const canRead = await e10sClient.isEntitledTo(
+  { entityType: 'user', key: userId },
+  { 
+    type: RequestContextType.Entity,
+    entityType: 'document',
+    key: documentId,
+    action: 'read'
+  }
+);
+```
+
+## API Endpoints
+
+- `POST /api/documents` - Create new document
+- `GET /api/documents` - List accessible documents
+- `GET /api/documents/:id` - Get specific document
+- `PUT /api/documents/:id` - Update document (requires write)
+- `DELETE /api/documents/:id` - Delete document (requires owner)
+- `POST /api/documents/:id/share` - Share document (requires owner)
+- `DELETE /api/documents/:id/share/:userId` - Revoke access
+- `POST /api/permissions/check` - Check specific permission
+
+## Future Enhancements
+
+This demo is prepared for Frontegg's upcoming hierarchical permissions:
+- Folder structure is modeled in the database
+- UI components ready for folder navigation
+- Permission inheritance logic can be enabled when available
+
+## Troubleshooting
+
+### Entitlements Agent Issues
+```bash
+# Check agent logs
+npm run docker:logs
+
+# Restart services
+npm run docker:down
+npm run docker:up
+```
+
+### Permission Denied Errors
+1. Verify ReBAC configuration in Frontegg Portal
+2. Check that Entitlements Agent is running
+3. Ensure user relationships are properly assigned
+
+### Database Issues
+- SQLite database is stored as `backend/database.sqlite`
+- Delete this file to reset the database
+- Database is created automatically on first run
+
+## Development Scripts
+
+### Root Level Commands
+```bash
+npm start               # 🚀 Start everything (Docker + Backend + Frontend)
+npm run dev             # Start frontend and backend (requires Docker running)
+npm run dev:no-docker   # Start without Docker (mock ReBAC)
+npm run install:all     # Install all dependencies
+npm run docker:up       # Start Docker services only
+npm run docker:down     # Stop Docker services
+npm run docker:logs     # View Docker container logs
+```
+
+### Frontend Commands
+```bash
+cd frontend
+npm start               # Start React dev server (port 3000)
+npm run build          # Build for production
+npm test               # Run tests
+```
+
+### Backend Commands
+```bash
+cd backend
+npm run dev            # Start with nodemon (port 5000)
+npm start              # Start production server
+```
+
+## Learn More
+
+- [Frontegg ReBAC Documentation](https://developers.frontegg.com/guides/authorization/rebac)
+- [Frontegg React SDK](https://developers.frontegg.com/sdks/frontend/react)
+- [Entitlements Agent Setup](https://developers.frontegg.com/guides/authorization/entitlements/agent)
+
+## Common Issues & Solutions
+
+### ReBAC Not Working
+1. **Error**: "403 Forbidden" or "ReBAC assignment failed"
+   - **Solution**: Configure ReBAC in Frontegg Portal (see section 3)
+   - **Check**: Portal → Entitlements → ReBAC → Ensure configuration exists
+
+2. **Error**: "Cannot connect to Entitlements Agent"
+   - **Solution**: Ensure Docker is running and `npm run docker:up` succeeded
+   - **Check**: Run `docker ps` to verify container is running
+
+### Authentication Issues
+1. **Error**: "No token provided" or "Invalid token"
+   - **Solution**: Log out and log back in to refresh token
+   - **Check**: Verify `.env` files have correct Frontegg credentials
+
+### Setup Issues
+1. **Error**: "npm install" fails
+   - **Solution**: Clear npm cache: `npm cache clean --force`
+   - **Alternative**: Delete `node_modules` and `package-lock.json`, then reinstall
+
+2. **Error**: Port already in use
+   - **Solution**: Change ports in `.env` files or kill existing processes
+   - **Frontend**: Change port with `PORT=3001 npm start`
+   - **Backend**: Update `PORT` in `backend/.env`
+
+## License
+
+This is a demo application for educational purposes.

@@ -1,0 +1,111 @@
+.embedded-components-page {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.page-header {
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+  padding: 32px 24px;
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+  color: #1a202c;
+  letter-spacing: -0.5px;
+}
+
+.header-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4a5568;
+  margin: 0;
+  max-width: 800px;
+}
+
+.page-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+/* Component Sections */
+.component-section {
+  margin-bottom: 48px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+
+.section-description {
+  font-size: 14px;
+  color: #718096;
+  margin: 0 0 24px 0;
+}
+
+/* Embedded components with white background */
+.component-wrapper {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.component-wrapper:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.security-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* Ensure Frontegg components blend well */
+.component-wrapper > div {
+  background: transparent !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-header {
+    padding: 24px 16px;
+  }
+  
+  .page-header h1 {
+    font-size: 28px;
+  }
+  
+  .header-description {
+    font-size: 14px;
+  }
+  
+  .page-content {
+    padding: 0 16px 32px;
+  }
+  
+  .component-section {
+    margin-bottom: 32px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .component-wrapper {
+    padding: 24px;
+  }
+}

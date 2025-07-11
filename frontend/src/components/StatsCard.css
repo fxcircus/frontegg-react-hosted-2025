@@ -1,0 +1,140 @@
+.stats-card {
+  background: white;
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.stats-card-primary::before {
+  background: var(--gradient-primary);
+}
+
+.stats-card-success::before {
+  background: linear-gradient(135deg, #51cf66 0%, #6eda78 100%);
+}
+
+.stats-card-warning::before {
+  background: linear-gradient(135deg, #ffd93d 0%, #ffe066 100%);
+}
+
+.stats-card-error::before {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
+}
+
+.stats-card-secondary::before {
+  background: linear-gradient(135deg, var(--gray-600) 0%, var(--gray-700) 100%);
+}
+
+.stats-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stats-card:hover::before {
+  opacity: 1;
+}
+
+.stats-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.stats-card-icon {
+  font-size: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-50);
+  border-radius: 12px;
+}
+
+.stats-card-trend {
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.trend-success {
+  color: var(--success-color);
+  background: rgba(81, 207, 102, 0.1);
+}
+
+.trend-error {
+  color: var(--error-color);
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.trend-neutral {
+  color: var(--gray-500);
+  background: var(--gray-100);
+}
+
+.stats-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stats-card-value {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  letter-spacing: -0.5px;
+}
+
+.stats-card-label {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .stats-card {
+    padding: 16px;
+  }
+  
+  .stats-card-header {
+    margin-bottom: 12px;
+  }
+  
+  .stats-card-icon {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .stats-card-trend {
+    font-size: 1rem;
+  }
+  
+  .stats-card-value {
+    font-size: 1.5rem;
+  }
+  
+  .stats-card-label {
+    font-size: 0.875rem;
+  }
+}

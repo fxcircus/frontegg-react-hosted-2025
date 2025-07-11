@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFeatureEntitlements, usePermissionEntitlements, useEntitlements } from "@frontegg/react";
+import Card from './Card';
 import "../App.css";
 import "../index.css";
 import ErrorBoundary from './ErrorBoundary';
@@ -20,18 +21,23 @@ const useSafeEntitlement = (hook, ...args) => {
 
 const EntitlementsInfo = () => {
   // ------------------------------------------------------------
-  // Replace with the entitlement key from your app
+  // Replace with the correct keys from your app
   // See https://developers.frontegg.com/sdks/frontend/react/entitlements for details.
-  const entitlementKey = "test";
+  const featureKey = "test"; // Feature entitlement key
+  const permissionKey = "fe.secure.read.securityPolicy"; // Permission entitlement key
   // ------------------------------------------------------------
 
   console.log('Before hooks');
   
-  // Use our safe wrapper for each hook
-  const featureEntitlements = useSafeEntitlement(useFeatureEntitlements, entitlementKey);
-  const permissionEntitlements = useSafeEntitlement(usePermissionEntitlements, entitlementKey);
-  const entitlementsByPermission = useSafeEntitlement(useEntitlements, { permissionKey: entitlementKey });
-  const entitlementsByFeature = useSafeEntitlement(useEntitlements, { featureKey: entitlementKey });
+  // Feature-based entitlements
+  const featureEntitlements = useSafeEntitlement(useFeatureEntitlements, featureKey);
+
+  // Permission-based entitlements
+  const permissionEntitlements = useSafeEntitlement(usePermissionEntitlements, permissionKey);
+
+  // Generic entitlement checks
+  const entitlementsByPermission = useSafeEntitlement(useEntitlements, { permissionKey });
+  const entitlementsByFeature = useSafeEntitlement(useEntitlements, { featureKey });
 
   console.log('Processed Entitlements:', {
     featureEntitlements,
@@ -50,27 +56,26 @@ const EntitlementsInfo = () => {
 
   return (
     <ErrorBoundary>
-      <div>
-        <label className="info-label">Plans and Features</label>
+      <Card title="Plans and Features" subtitle="View your account's entitlements and permissions.">
         <div className="entitlements-section">
           {isFEntitled && (
             <div className="entitlement-item">
-              Your plan includes the <b>"{entitlementKey}"</b> feature.
+              Your plan includes the <b>"{featureKey}"</b> feature.
             </div>
           )}
           {isPEntitled && (
             <div className="entitlement-item">
-              Your plan includes the <b>"{entitlementKey}"</b> permission.
+              Your plan includes the <b>"{permissionKey}"</b> permission.
             </div>
           )}
           {isPEntitled2 && (
             <div className="entitlement-item">
-              You have a permission with the <b>"{entitlementKey}"</b> key.
+              You have a permission with the <b>"{permissionKey}"</b> key.
             </div>
           )}
           {isFEntitled2 && (
             <div className="entitlement-item">
-              You have a feature with the <b>"{entitlementKey}"</b> key.
+              You have a feature with the <b>"{featureKey}"</b> key.
             </div>
           )}
           {!hasEntitlement && (
@@ -89,7 +94,7 @@ const EntitlementsInfo = () => {
             </a>.
           </p>
         </div>
-      </div>
+      </Card>
     </ErrorBoundary>
   );
 };
