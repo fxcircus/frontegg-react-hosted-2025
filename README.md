@@ -60,6 +60,13 @@ The `npm start` command will automatically:
 - **Access Control**: Real-time permission validation
 - **Relationship-Based Security**: Powered by Frontegg ReBAC
 
+### Backend SDK Demo (Pokemon Game)
+- **API Protection Examples**: Learn how to protect your backend APIs using JWT authentication
+- **Permission-Based Access**: See role-based permissions in action with catch, view, and trade actions
+- **JWT Verification**: Comprehensive token validation with detailed verification steps
+- **Interactive Demo**: Pokemon-themed game demonstrating real-world security patterns
+- **Production-Ready Code**: Copy and adapt authentication middleware for your own APIs
+
 ## Architecture
 
 ```
@@ -188,9 +195,11 @@ The app features a modern sidebar navigation with the following sections:
 1. **Dashboard** - Overview with interactive stats cards
 2. **User & Auth** - JWT tokens, user details, and authentication info
 3. **Tenants** - Tenant hierarchy management and metadata
-4. **API Playground** - Test Frontegg APIs interactively
-5. **Embedded Components** - Admin portal features embedded in your UI
-6. **Documents (ReBAC)** - Document management with relationship-based permissions
+4. **Documents (ReBAC)** - Document management with relationship-based permissions
+5. **Backend SDK** - Pokemon game demo showcasing API protection patterns
+6. **JWT Verifier** - Tool to validate and decode JWT tokens
+7. **Embedded Components** - Admin portal features embedded in your UI
+8. **API Playground** - Test Frontegg APIs interactively
 
 ### Using the ReBAC Demo
 
@@ -202,6 +211,21 @@ The app features a modern sidebar navigation with the following sections:
    - Enter the user's email or ID
    - Choose permission level (viewer or editor)
 5. **Test permissions** by logging in as different users
+
+### Using the Backend SDK Demo (Pokemon Game)
+
+1. **Navigate to Backend SDK** in the sidebar
+2. **Configure permissions** in Frontegg Portal:
+   - Add permissions: `pokemon.catch`, `pokemon.view`, `pokemon.trade`
+   - Assign permissions to roles
+3. **Play the demo game**:
+   - Catch Pokemon (requires catch permission)
+   - View your collection
+   - Trade with other users
+4. **Learn from the code**:
+   - Check `backend/src/middleware/auth.js` for JWT verification
+   - Review `backend/src/middleware/permissions.js` for permission checks
+   - See API documentation in `docs/POKEMON_API.md`
 
 ## ReBAC Permission Model
 
@@ -236,6 +260,13 @@ const canRead = await e10sClient.isEntitledTo(
 - `POST /api/documents/:id/share` - Share document (requires owner)
 - `DELETE /api/documents/:id/share/:userId` - Revoke access
 - `POST /api/permissions/check` - Check specific permission
+
+### Pokemon Backend SDK Demo Endpoints
+
+- `GET /api/pokemon/catch` - Catch a random Pokemon (requires `pokemon.catch` permission)
+- `GET /api/pokemon/my-collection` - View your Pokemon collection (requires `pokemon.view` permission)
+- `POST /api/pokemon/trade/:userId` - Trade Pokemon with another user (requires `pokemon.trade` permission)
+- `POST /api/auth/verify-token` - Verify and decode JWT tokens (no permission required)
 
 ## Future Enhancements
 

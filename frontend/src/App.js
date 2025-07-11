@@ -14,6 +14,8 @@ import TenantMetadata from './components/TenantMetadata';
 import APIPlayground from './components/APIPlayground';
 import AdminPortal from './components/AdminPortal';
 import DocumentManager from './components/DocumentManager/DocumentManager';
+import Pokemon from './components/Pokemon/Pokemon';
+import JWTVerifier from './components/JWTVerifier/JWTVerifier';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -50,6 +52,10 @@ function App() {
         return <AdminPortal />;
       case 'documents':
         return <DocumentManager />;
+      case 'pokemon':
+        return <Pokemon />;
+      case 'jwt-verifier':
+        return <JWTVerifier />;
       default:
         return <Dashboard />;
     }

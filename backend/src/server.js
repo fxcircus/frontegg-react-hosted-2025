@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const sequelize = require('./models/database');
 
 // Import middleware and services
-const { authenticate } = require('./middleware/auth');
+const { authenticate, verifyToken } = require('./middleware/auth');
+const { checkPermission, pokemonPermissions } = require('./middleware/permissions');
 
 // Check if we should use mock ReBAC (when Docker is not available)
 const USE_MOCK_REBAC = process.env.USE_MOCK_REBAC === 'true' || process.env.DISABLE_REBAC === 'true';
@@ -22,6 +23,7 @@ const fronteggService = require('./services/frontegg');
 
 // Import controllers
 const DocumentController = require('./controllers/documents');
+const pokemonController = require('./controllers/pokemon');
 
 // Initialize app
 const app = express();
@@ -48,6 +50,9 @@ async function connectDB() {
   try {
     await sequelize.authenticate();
     console.log('Connected to SQLite database');
+    
+    // Import Pokemon model to ensure it's registered
+    require('./models/pokemon');
     
     // Sync database models
     await sequelize.sync({ alter: true });
@@ -158,6 +163,27 @@ app.post('/api/permissions/check', authenticate, async (req, res) => {
     });
   }
 });
+
+// Pokemon routes with permission checks
+app.get('/api/pokemon/catch', authenticate, pokemonPermissions.catch, (req, res) => 
+  pokemonController.catch(req, res)
+);
+
+app.get('/api/pokemon/my-collection', authenticate, pokemonPermissions.view, (req, res) => 
+  pokemonController.getMyCollection(req, res)
+);
+
+app.post('/api/pokemon/trade/:userId', authenticate, pokemonPermissions.trade, (req, res) => 
+  pokemonController.trade(req, res)
+);
+
+// Bonus: Leaderboard (no permission required, but must be authenticated)
+app.get('/api/pokemon/leaderboard', authenticate, (req, res) => 
+  pokemonController.getLeaderboard(req, res)
+);
+
+// JWT Verification endpoint (no authentication required)
+app.post('/api/auth/verify-token', verifyToken);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

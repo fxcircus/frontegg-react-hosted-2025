@@ -14,6 +14,8 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileClose }
     { id: 'user', label: 'User & Auth', icon: '👤' },
     { id: 'tenants', label: 'Tenants', icon: '🏢' },
     { id: 'documents', label: 'Documents (ReBAC)', icon: '📄' },
+    { id: 'pokemon', label: 'Backend SDK', icon: '🔒' },
+    { id: 'jwt-verifier', label: 'JWT Verifier', icon: '🔐' },
     { id: 'admin', label: 'Embedded Components', icon: '⚙️' },
     { id: 'api', label: 'API Playground', icon: '🚀' },
   ];

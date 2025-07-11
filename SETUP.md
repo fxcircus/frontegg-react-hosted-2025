@@ -41,8 +41,17 @@ REACT_APP_BASE_URL=https://app-xxx.frontegg.com
 REACT_APP_APP_ID=your-app-id
 ```
 
-### 3. Configure ReBAC (Required for Document Management)
+### 3. Configure Permissions & ReBAC
 
+#### Backend SDK Demo Permissions
+1. In Frontegg Portal, go to **[Environment]** → **Authorization** → **Permissions**
+2. Add these permissions:
+   - `pokemon.catch` - Catch Pokemon
+   - `pokemon.view` - View Pokemon collection
+   - `pokemon.trade` - Trade Pokemon
+3. Assign permissions to roles in **Authorization** → **Roles**
+
+#### ReBAC Configuration (Required for Document Management)
 1. In Frontegg Portal, go to **[Environment]** → **Entitlements** → **ReBAC**
 2. Click **"Configure ReBAC"**
 3. Add Entity:
@@ -78,9 +87,11 @@ This single command will:
 2. **Dashboard** - Overview with stats cards
 3. **User & Auth** - JWT tokens and user info
 4. **Tenants** - Multi-tenant management
-5. **API Playground** - Test Frontegg APIs
-6. **Embedded Components** - Admin portal features
-7. **Documents (ReBAC)** - Document management demo
+5. **Documents (ReBAC)** - Document management demo
+6. **Backend SDK** - Pokemon game demonstrating API protection
+7. **JWT Verifier** - Token validation tool
+8. **Embedded Components** - Admin portal features
+9. **API Playground** - Test Frontegg APIs
 
 ## 🔧 Troubleshooting
 
@@ -134,12 +145,15 @@ npm start
 
 1. **Create test users** in Frontegg Portal
 2. **Try document sharing** between users
-3. **Explore API Playground** with your token
-4. **Customize** the UI components
+3. **Play the Pokemon game** to understand API protection
+4. **Explore API Playground** with your token
+5. **Check JWT Verifier** to understand token structure
+6. **Customize** the UI components for your needs
 
 ## 🆘 Need Help?
 
 - Check the [main README](README.md) for detailed documentation
+- View [Backend SDK Demo Docs](docs/POKEMON_API.md) for API protection examples
 - View [Frontegg Docs](https://developers.frontegg.com)
 - Check container logs: `npm run docker:logs`
 - Backend health: `http://localhost:5000/api/health`
