@@ -81,4 +81,5 @@ docker-volumes/
 
 # Claude specific
 .claude/
+CLAUDE.md
 CLAUDE.md.backup
