@@ -27,6 +27,8 @@ This demo shows exactly how Frontegg handles all of this for you.
 User Request → JWT Verification → Permission Check → Your Business Logic → Response
 ```
 
+📚 Learn more: [Backend SDK Protection](https://docs.frontegg.com/docs/sdk-backend-protection)
+
 ### Step 1: JWT Verification (`/backend/src/middleware/auth.js`)
 
 Every API request includes a JWT token that Frontegg validates:
@@ -41,6 +43,8 @@ Every API request includes a JWT token that Frontegg validates:
 ```
 
 **Result**: You know the request comes from an authenticated user.
+
+📚 Learn more: [JWT Verification with Public Keys](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
 
 ### Step 2: Permission Checking (`/backend/src/middleware/permissions.js`)
 
@@ -65,6 +69,8 @@ Configure these permissions in your Frontegg Portal:
 
 👉 **Real-World Example**: Replace "Pokemon" with your business entities (e.g., "documents", "reports", "invoices")
 
+📚 Learn more: [Permissions Guide](https://developers.frontegg.com/guides/authorization/rbac/permissions)
+
 1. Log into [Frontegg Portal](https://portal.frontegg.com)
 2. Navigate to **[Environment]** → **Authorization** → **Permissions**
 3. Click **"Add Permission"** and create:
@@ -83,6 +89,8 @@ Configure these permissions in your Frontegg Portal:
 - `document.export` - Export to PDF/Excel
 
 ### Assigning Permissions to Roles
+
+📚 Learn more: [Roles Configuration](https://developers.frontegg.com/guides/authorization/rbac/roles)
 
 1. Go to **[Environment]** → **Authorization** → **Roles**
 2. Create or edit roles:
@@ -236,6 +244,8 @@ Configure these permissions in your Frontegg Portal:
 
 ### 1. Install Frontegg Backend SDK
 
+📚 Learn more: [Frontegg Node.js Client](https://docs.frontegg.com/docs/frontegg-nodejs-client)
+
 ```bash
 npm install @frontegg/client jsonwebtoken jwks-rsa
 ```
@@ -287,6 +297,8 @@ function requirePermission(permission) {
 ```
 
 ### 4. Protect Your Endpoints
+
+📚 Learn more: [Protect Your Backend APIs](https://developers.frontegg.com/guides/integrations/protect-backend-api/overview)
 
 ```javascript
 // Your actual business endpoints

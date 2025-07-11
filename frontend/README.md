@@ -2,6 +2,8 @@
 
 This is the React frontend for the Frontegg Demo Application, showcasing comprehensive authentication, authorization, and enterprise features including Multi-Tenancy, Admin Portal, API Playground, Backend SDK Demo, and Relationship-Based Access Control (ReBAC).
 
+📚 **Frontegg React SDK Documentation**: [React SDK Guide](https://developers.frontegg.com/sdks/frontend/react)
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
@@ -26,6 +28,8 @@ Sign up for a Frontegg account in one of our public regions:
 - AU ➜ <a href="https://portal.au.frontegg.com/signup" target="_blank">https://portal.au.frontegg.com/signup</a>
 
 Complete the initial onboarding form and note down your Client ID and API Key from the Frontegg Portal.
+
+📚 Learn more: [Getting Started with Frontegg](https://developers.frontegg.com/guides/getting-started/home)
 
 ## Code Setup
 
@@ -80,26 +84,26 @@ Open your browser and navigate to `http://localhost:3000`. Sign up as a new user
 ## Features
 
 ### Core Authentication & User Management
-- **Hosted Login**: Secure authentication with Frontegg's hosted login
-- **JWT Token Display**: View and decode authentication tokens
-- **User Profile**: Display user details, roles, and permissions
-- **Multi-Factor Authentication**: Step-up authentication support
+- **Hosted Login**: Secure authentication with Frontegg's hosted login - [React Hosted Login Guide](https://docs.frontegg.com/docs/react-hosted-login-guide)
+- **JWT Token Display**: View and decode authentication tokens - [JWT Verification](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
+- **User Profile**: Display user details, roles, and permissions - [Auth Functions](https://developers.frontegg.com/sdks/components/auth-functions)
+- **Multi-Factor Authentication**: Step-up authentication support - [Step-up Auth Guide](https://developers.frontegg.com/guides/step-up/intro)
 
 ### Multi-Tenancy & Entitlements
-- **Tenant Hierarchy Switcher**: Visual tenant navigation with sub-accounts
-- **Tenant Metadata**: View and manage tenant-specific settings
-- **Account Switching**: Seamless switching between tenant contexts
+- **Tenant Hierarchy Switcher**: Visual tenant navigation with sub-accounts - [Sub-accounts & Hierarchy](https://developers.frontegg.com/api/tenants/sub-accounts-and-hierarchy)
+- **Tenant Metadata**: View and manage tenant-specific settings - [Tenant Metadata API](https://developers.frontegg.com/api/tenants/accounts/tenantcontrollerv1_addtenantmetadata)
+- **Account Switching**: Seamless switching between tenant contexts - [Switch Active Tenant](https://docs.frontegg.com/docs/switch-active-tenant-from-your-application)
 - **<a href="https://developers.frontegg.com/guides/authorization/entitlements/feature-based/plans" target="_blank">Feature Entitlements</a>**: Feature flags and permission-based access
 
 ### Developer Tools
-- **API Playground**: Test Frontegg APIs with live authentication
-- **Backend SDK Demo**: Interactive Pokemon game demonstrating API protection
-- **JWT Verifier**: Comprehensive token validation tool
+- **API Playground**: Test Frontegg APIs with live authentication - [API Reference](https://docs.frontegg.com/reference/getting-started-with-your-api)
+- **Backend SDK Demo**: Interactive Pokemon game demonstrating API protection - [Backend SDK Protection](https://docs.frontegg.com/docs/sdk-backend-protection)
+- **JWT Verifier**: Comprehensive token validation tool - [JWT Verification Docs](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
 - **Copy Values**: Click on any value to copy it to clipboard
 
 ### Admin Features
-- **<a href="https://developers.frontegg.com/guides/admin-portal/intro" target="_blank">Admin Portal</a>**: Embedded user management and SSO configuration
-- **Document Management (ReBAC)**: Fine-grained permission control with document sharing
+- **<a href="https://developers.frontegg.com/guides/admin-portal/intro" target="_blank">Admin Portal</a>**: Embedded user management and SSO configuration - [React Self-Service Integration](https://docs.frontegg.com/docs/react-self-service)
+- **Document Management (ReBAC)**: Fine-grained permission control with document sharing - [ReBAC Documentation](https://developers.frontegg.com/guides/authorization/rebac)
 - **<a href="https://developers.frontegg.com/guides/step-up/intro" target="_blank">Step-Up MFA</a>**: Enhanced security for sensitive operations
 
 ## Components Overview

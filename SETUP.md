@@ -25,6 +25,8 @@ npm run install:all
 2. Go to **[Environment]** → **Settings** → **API Keys**
 3. Copy your Client ID and API Key
 
+📚 Learn more: [Getting Started with Frontegg APIs](https://docs.frontegg.com/reference/getting-started-with-your-api)
+
 #### Create environment files:
 
 **backend/.env**
@@ -44,14 +46,16 @@ REACT_APP_APP_ID=your-app-id
 ### 3. Configure Permissions & ReBAC
 
 #### Backend SDK Demo Permissions
-1. In Frontegg Portal, go to **[Environment]** → **Authorization** → **Permissions**
+1. In Frontegg Portal, go to **[Environment]** → **Authorization** → **Permissions** - [Permissions Guide](https://developers.frontegg.com/guides/authorization/rbac/permissions)
 2. Add these permissions:
    - `pokemon.catch` - Catch Pokemon
    - `pokemon.view` - View Pokemon collection
    - `pokemon.trade` - Trade Pokemon
-3. Assign permissions to roles in **Authorization** → **Roles**
+3. Assign permissions to roles in **Authorization** → **Roles** - [Roles Guide](https://developers.frontegg.com/guides/authorization/rbac/roles)
 
 #### ReBAC Configuration (Required for Document Management)
+📚 Learn more: [ReBAC Documentation](https://developers.frontegg.com/guides/authorization/rebac)
+
 1. In Frontegg Portal, go to **[Environment]** → **Entitlements** → **ReBAC**
 2. Click **"Configure ReBAC"**
 3. Add Entity:
@@ -68,6 +72,8 @@ REACT_APP_APP_ID=your-app-id
    - `share` → Allow: owner
 6. Click **Save**
 
+For Entitlements Agent setup: [Agent Documentation](https://developers.frontegg.com/guides/authorization/entitlements/agent)
+
 ### 4. Start Everything
 
 ```bash
@@ -83,15 +89,15 @@ This single command will:
 
 ## 🎯 What You'll See
 
-1. **Login Page** - Frontegg hosted authentication
+1. **Login Page** - Frontegg hosted authentication - [Hosted Login Guide](https://docs.frontegg.com/docs/react-hosted-login-guide)
 2. **Dashboard** - Overview with stats cards
-3. **User & Auth** - JWT tokens and user info
-4. **Tenants** - Multi-tenant management
-5. **Documents (ReBAC)** - Document management demo
-6. **Backend SDK** - Pokemon game demonstrating API protection
-7. **JWT Verifier** - Token validation tool
-8. **Embedded Components** - Admin portal features
-9. **API Playground** - Test Frontegg APIs
+3. **User & Auth** - JWT tokens and user info - [Authentication Basics](https://developers.frontegg.com/guides/authentication/overview)
+4. **Tenants** - Multi-tenant management - [Multi-Tenancy Architecture](https://docs.frontegg.com/docs/vendor-tenant-users-in-frontegg)
+5. **Documents (ReBAC)** - Document management demo - [ReBAC Guide](https://developers.frontegg.com/guides/authorization/rebac)
+6. **Backend SDK** - Pokemon game demonstrating API protection - [Backend Protection](https://docs.frontegg.com/docs/sdk-backend-protection)
+7. **JWT Verifier** - Token validation tool - [JWT Verification](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
+8. **Embedded Components** - Admin portal features - [Admin Portal Guide](https://docs.frontegg.com/docs/react-self-service)
+9. **API Playground** - Test Frontegg APIs - [API Reference](https://docs.frontegg.com/reference/getting-started-with-your-api)
 
 ## 🔧 Troubleshooting
 

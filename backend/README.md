@@ -2,20 +2,22 @@
 
 This is the Node.js/Express backend for the Frontegg Demo Application, providing secure API endpoints demonstrating JWT authentication, permission-based authorization, and ReBAC (Relationship-Based Access Control).
 
+📚 **Frontegg Backend Documentation**: [Node.js SDK Guide](https://docs.frontegg.com/docs/frontegg-nodejs-client) | [Backend Protection](https://docs.frontegg.com/docs/sdk-backend-protection)
+
 ## Overview
 
 The backend showcases production-ready patterns for:
-- JWT token verification with Frontegg
-- Permission-based API protection
-- ReBAC integration for fine-grained access control
-- Multi-tenant data isolation
+- JWT token verification with Frontegg - [JWT Verification Guide](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
+- Permission-based API protection - [Permissions Guide](https://developers.frontegg.com/guides/authorization/rbac/permissions)
+- ReBAC integration for fine-grained access control - [ReBAC Documentation](https://developers.frontegg.com/guides/authorization/rebac)
+- Multi-tenant data isolation - [Multi-Tenancy Architecture](https://docs.frontegg.com/docs/vendor-tenant-users-in-frontegg)
 - Secure user-to-user interactions
 
 ## Prerequisites
 
 - Node.js 16+ and npm
 - Docker and Docker Compose (for ReBAC features)
-- Frontegg account with API credentials
+- Frontegg account with API credentials - [Getting Started](https://docs.frontegg.com/reference/getting-started-with-your-api)
 
 ## Environment Configuration
 
@@ -34,6 +36,8 @@ FRONTEND_URL=http://localhost:3000
 # ReBAC Configuration
 ENTITLEMENTS_AGENT_URL=http://localhost:8181
 ```
+
+📚 Learn more: [Entitlements Agent Setup](https://developers.frontegg.com/guides/authorization/entitlements/agent)
 
 ## Running the Backend
 
@@ -85,6 +89,8 @@ backend/
 - `GET /api/pokemon/catch` - Catch a Pokemon (requires `pokemon.catch`)
 - `GET /api/pokemon/my-collection` - View collection (requires `pokemon.view`)
 - `POST /api/pokemon/trade/:userId` - Trade Pokemon (requires `pokemon.trade`)
+
+📚 See full documentation: [Pokemon API Guide](../docs/POKEMON_API.md)
 
 ### Documents (ReBAC Demo)
 - `POST /api/documents` - Create document
@@ -266,7 +272,15 @@ docker-compose up -d
 
 ## Learn More
 
-- [Frontegg Backend SDK](https://developers.frontegg.com/sdks/backend/node)
-- [JWT Verification Guide](https://developers.frontegg.com/guides/auth/jwt)
-- [ReBAC Documentation](https://developers.frontegg.com/guides/authorization/rebac)
+### Frontegg Documentation
+- [Node.js SDK Reference](https://docs.frontegg.com/docs/frontegg-nodejs-client)
+- [Backend Protection Guide](https://docs.frontegg.com/docs/sdk-backend-protection)
+- [JWT Verification](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
+- [Permissions & Roles](https://developers.frontegg.com/guides/authorization/rbac/permissions)
+- [ReBAC Guide](https://developers.frontegg.com/guides/authorization/rebac)
+- [API Protection](https://developers.frontegg.com/guides/integrations/protect-backend-api/overview)
+
+### Project Documentation
 - [Pokemon API Documentation](../docs/POKEMON_API.md)
+- [Main README](../README.md)
+- [Setup Guide](../SETUP.md)

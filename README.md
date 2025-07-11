@@ -29,43 +29,43 @@ The `npm start` command will automatically:
 ## Features
 
 ### Core Authentication & User Management
-- **Hosted Authentication**: Secure login/logout with Frontegg's hosted login
-- **JWT Token Display**: View and decode authentication tokens
-- **User Profile**: Display user details, roles, and permissions
-- **Multi-Factor Authentication**: Step-up authentication support
+- **Hosted Authentication**: Secure login/logout with Frontegg's hosted login - [Docs](https://docs.frontegg.com/docs/react-hosted-login-guide)
+- **JWT Token Display**: View and decode authentication tokens - [JWT Verification](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
+- **User Profile**: Display user details, roles, and permissions - [Authentication Methods](https://developers.frontegg.com/sdks/components/auth-functions)
+- **Multi-Factor Authentication**: Step-up authentication support - [Step-up Auth Guide](https://developers.frontegg.com/guides/step-up/intro)
 
 ### Multi-Tenancy
-- **Tenant Hierarchy Switcher**: Visual tenant navigation with sub-accounts
-- **Tenant Metadata**: View and manage tenant-specific settings
-- **Tenant Isolation**: Proper data separation between tenants
-- **Account Switching**: Seamless switching between tenant contexts
+- **Tenant Hierarchy Switcher**: Visual tenant navigation with sub-accounts - [Sub-accounts & Hierarchy](https://developers.frontegg.com/api/tenants/sub-accounts-and-hierarchy)
+- **Tenant Metadata**: View and manage tenant-specific settings - [Tenant Metadata API](https://developers.frontegg.com/api/tenants/accounts/tenantcontrollerv1_addtenantmetadata)
+- **Tenant Isolation**: Proper data separation between tenants - [Architecture Guide](https://docs.frontegg.com/docs/vendor-tenant-users-in-frontegg)
+- **Account Switching**: Seamless switching between tenant contexts - [Switch Active Tenant](https://docs.frontegg.com/docs/switch-active-tenant-from-your-application)
 
 ### Admin Portal Components
-- **Embedded User Management**: UsersTable component for team administration
-- **Profile Management**: Embedded ProfilePage for user settings
-- **Security Settings**: ChangePasswordForm for password updates
-- **Self-Service Portal**: Full admin capabilities within your app
+- **Embedded User Management**: UsersTable component for team administration - [Admin Portal Integration](https://docs.frontegg.com/docs/react-self-service)
+- **Profile Management**: Embedded ProfilePage for user settings - [Self-Service Portal Guide](https://developers.frontegg.com/guides/admin-portal/intro)
+- **Security Settings**: ChangePasswordForm for password updates - [Password Management](https://developers.frontegg.com/guides/authentication/credentials/passwords/management)
+- **Self-Service Portal**: Full admin capabilities within your app - [Admin Portal Modules](https://docs.frontegg.com/docs/customizing-admin-portal-modules)
 
 ### API Development Tools
-- **API Playground**: Test Frontegg APIs with live authentication
-- **Common Endpoints**: Pre-configured API examples by category
-- **Request Builder**: Custom headers and request body support
+- **API Playground**: Test Frontegg APIs with live authentication - [API Introduction](https://developers.frontegg.com/api/overview)
+- **Common Endpoints**: Pre-configured API examples by category - [API Reference](https://docs.frontegg.com/reference/getting-started-with-your-api)
+- **Request Builder**: Custom headers and request body support - [Getting Started with APIs](https://docs.frontegg.com/reference/permissionscontrollerv1_getallpermissions)
 - **cURL Export**: Copy requests as cURL commands
 - **Response Viewer**: Formatted JSON responses with timing
 
 ### Document Management with ReBAC
 - **Create & Manage Documents**: Full CRUD operations
-- **Fine-grained Permissions**: Owner, Editor, and Viewer roles
-- **Document Sharing**: Share with specific users and permissions
-- **Access Control**: Real-time permission validation
-- **Relationship-Based Security**: Powered by Frontegg ReBAC
+- **Fine-grained Permissions**: Owner, Editor, and Viewer roles - [ReBAC Guide](https://developers.frontegg.com/guides/authorization/rebac)
+- **Document Sharing**: Share with specific users and permissions - [Entitlements Overview](https://docs.frontegg.com/docs/entitlements)
+- **Access Control**: Real-time permission validation - [RBAC & Entitlements](https://developers.frontegg.com/guides/authorization/entitlements-rbac-overview)
+- **Relationship-Based Security**: Powered by Frontegg ReBAC - [Getting Started with Entitlements](https://developers.frontegg.com/guides/authorization/entitlements/intro)
 
 ### Backend SDK Demo (Pokemon Game)
-- **API Protection Examples**: Learn how to protect your backend APIs using JWT authentication
-- **Permission-Based Access**: See role-based permissions in action with catch, view, and trade actions
-- **JWT Verification**: Comprehensive token validation with detailed verification steps
-- **Interactive Demo**: Pokemon-themed game demonstrating real-world security patterns
-- **Production-Ready Code**: Copy and adapt authentication middleware for your own APIs
+- **API Protection Examples**: Learn how to protect your backend APIs - [Backend Protection Guide](https://docs.frontegg.com/docs/sdk-backend-protection)
+- **Permission-Based Access**: Role-based permissions in action - [Permissions Guide](https://developers.frontegg.com/guides/authorization/rbac/permissions)
+- **JWT Verification**: Comprehensive token validation - [JWT Verification Docs](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
+- **Interactive Demo**: Pokemon-themed game demonstrating security patterns - [Node.js SDK](https://docs.frontegg.com/docs/frontegg-nodejs-client)
+- **Production-Ready Code**: Copy and adapt authentication middleware - [Protect Backend API](https://developers.frontegg.com/guides/integrations/protect-backend-api/overview)
 
 ## Architecture
 
@@ -125,7 +125,8 @@ REACT_APP_BACKEND_URL=http://localhost:5000
 
 ### 3. Configure ReBAC in Frontegg Portal
 
-**Important**: ReBAC must be enabled in your Frontegg workspace for document permissions to work.
+**Important**: ReBAC must be enabled in your Frontegg workspace for document permissions to work. 
+Learn more: [ReBAC Documentation](https://developers.frontegg.com/guides/authorization/rebac)
 
 1. Log into your [Frontegg Portal](https://portal.frontegg.com)
 2. Navigate to: **[ENVIRONMENT]** → **Entitlements** → **ReBAC**
@@ -215,9 +216,9 @@ The app features a modern sidebar navigation with the following sections:
 ### Using the Backend SDK Demo (Pokemon Game)
 
 1. **Navigate to Backend SDK** in the sidebar
-2. **Configure permissions** in Frontegg Portal:
+2. **Configure permissions** in Frontegg Portal - [Permissions Setup](https://developers.frontegg.com/guides/authorization/rbac/permissions):
    - Add permissions: `pokemon.catch`, `pokemon.view`, `pokemon.trade`
-   - Assign permissions to roles
+   - Assign permissions to roles - [Roles Configuration](https://developers.frontegg.com/guides/authorization/rbac/roles)
 3. **Play the demo game**:
    - Catch Pokemon (requires catch permission)
    - View your collection
