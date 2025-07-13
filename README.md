@@ -40,11 +40,10 @@ The `npm start` command will automatically:
 - **Tenant Isolation**: Proper data separation between tenants - [Architecture Guide](https://docs.frontegg.com/docs/vendor-tenant-users-in-frontegg)
 - **Account Switching**: Seamless switching between tenant contexts - [Switch Active Tenant](https://docs.frontegg.com/docs/switch-active-tenant-from-your-application)
 
-### Admin Portal Components
-- **Embedded User Management**: UsersTable component for team administration - [Admin Portal Integration](https://docs.frontegg.com/docs/react-self-service)
-- **Profile Management**: Embedded ProfilePage for user settings - [Self-Service Portal Guide](https://developers.frontegg.com/guides/admin-portal/intro)
-- **Security Settings**: ChangePasswordForm for password updates - [Password Management](https://developers.frontegg.com/guides/authentication/credentials/passwords/management)
-- **Self-Service Portal**: Full admin capabilities within your app - [Admin Portal Modules](https://docs.frontegg.com/docs/customizing-admin-portal-modules)
+### Self-Service Portal
+- **Full Admin Portal**: Click "Self Service Portal" button in sidebar to open Frontegg's admin portal - [Admin Portal Integration](https://docs.frontegg.com/docs/react-self-service)
+- **User Management**: Manage team members, roles, and permissions - [Self-Service Portal Guide](https://developers.frontegg.com/guides/admin-portal/intro)
+- **Security Settings**: Configure authentication methods and security policies - [Admin Portal Modules](https://docs.frontegg.com/docs/customizing-admin-portal-modules)
 
 ### API Development Tools
 - **API Playground**: Test Frontegg APIs with live authentication - [API Introduction](https://developers.frontegg.com/api/overview)
@@ -199,8 +198,7 @@ The app features a modern sidebar navigation with the following sections:
 4. **Documents (ReBAC)** - Document management with relationship-based permissions
 5. **Backend SDK** - Pokemon game demo showcasing API protection patterns
 6. **JWT Verifier** - Tool to validate and decode JWT tokens
-7. **Embedded Components** - Admin portal features embedded in your UI
-8. **API Playground** - Test Frontegg APIs interactively
+7. **API Playground** - Test Frontegg APIs interactively
 
 ### Using the ReBAC Demo
 

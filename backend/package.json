@@ -6,6 +6,10 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "dev:no-rebac": "USE_MOCK_REBAC=true nodemon src/server.js",
+    "clean-db": "node clean-db.js",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
     "test": "jest"
   },
   "dependencies": {

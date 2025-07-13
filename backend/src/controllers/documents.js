@@ -26,12 +26,19 @@ class DocumentController {
         tags: tags || []
       });
 
-      // Assign owner relation in Frontegg
+      // Assign owner relation in Frontegg using user's token
       try {
-        await fronteggService.assignOwner(userId, document.id);
+        // Extract user token from request
+        const authHeader = req.headers.authorization;
+        const userToken = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
+        
+        if (userToken) {
+          await fronteggService.assignOwner(userId, document.id, userToken);
+        } else {
+          console.warn('No user token found in request - ReBAC assignment skipped');
+        }
       } catch (rebacError) {
-        console.warn('ReBAC assignment failed:', rebacError.message);
-        console.warn('To enable ReBAC: Frontegg Portal → [Environment] → Entitlements → ReBAC → Configure');
+        console.error('ReBAC assignment failed:', rebacError.message);
         // Continue anyway - document is created, just without ReBAC relation
       }
 

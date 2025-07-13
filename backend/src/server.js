@@ -185,6 +185,52 @@ app.get('/api/pokemon/leaderboard', authenticate, (req, res) =>
 // JWT Verification endpoint (no authentication required)
 app.post('/api/auth/verify-token', verifyToken);
 
+// Debug endpoint for ReBAC (temporary - remove in production)
+app.get('/api/debug/rebac-status', authenticate, async (req, res) => {
+  const userId = req.frontegg.user.sub;
+  const status = {
+    user: userId,
+    rebacMode: USE_MOCK_REBAC ? 'mock' : 'real',
+    entitlementsAgent: false,
+    apiCredentials: false,
+    rebacConfig: false
+  };
+
+  // Check Entitlements Agent
+  try {
+    const axios = require('axios');
+    await axios.get(`${process.env.ENTITLEMENTS_AGENT_URL}/health`, { timeout: 1000 });
+    status.entitlementsAgent = true;
+  } catch (e) {}
+
+  // Check API credentials can access ReBAC
+  try {
+    const axios = require('axios');
+    await axios.get(`${process.env.FRONTEGG_BASE_URL}/resources/configurations/v1`, {
+      headers: {
+        'frontegg-client-id': process.env.FRONTEGG_CLIENT_ID,
+        'frontegg-api-key': process.env.FRONTEGG_API_KEY
+      }
+    });
+    status.apiCredentials = true;
+  } catch (e) {}
+
+  // Check ReBAC configuration
+  try {
+    const axios = require('axios');
+    const response = await axios.get(`${process.env.FRONTEGG_BASE_URL}/resources/configurations/v1/entitlements/rebac`, {
+      headers: {
+        'frontegg-client-id': process.env.FRONTEGG_CLIENT_ID,
+        'frontegg-api-key': process.env.FRONTEGG_API_KEY
+      }
+    });
+    status.rebacConfig = true;
+    status.entities = response.data.entities?.map(e => e.key) || [];
+  } catch (e) {}
+
+  res.json(status);
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);

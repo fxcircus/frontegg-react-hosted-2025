@@ -48,8 +48,8 @@ function App() {
         );
       case 'api':
         return <APIPlayground />;
-      case 'admin':
-        return <AdminPortal />;
+      // case 'admin':
+      //   return <AdminPortal />;
       case 'documents':
         return <DocumentManager />;
       case 'pokemon':

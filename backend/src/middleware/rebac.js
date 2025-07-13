@@ -29,13 +29,32 @@ async function initializeReBACClient(pdpHost) {
   }
   
   try {
+    // Wait a bit for the agent to be fully ready
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     e10sClient = EntitlementsClientFactory.create({
       pdpHost: host
     });
-    console.log('✅ ReBAC client initialized with Entitlements Agent at', host);
+    
+    // Test the client with a simple query to ensure it's working
+    try {
+      await e10sClient.isEntitledTo(
+        { entityType: 'user', key: 'test-init' },
+        { type: RequestContextType.Entity, entityType: 'document', key: 'test-init', action: 'read' }
+      );
+      console.log('✅ ReBAC client initialized and tested successfully at', host);
+    } catch (testError) {
+      if (testError.message && testError.message.includes('monitoring')) {
+        console.warn('⚠️  ReBAC client initialized but may have compatibility issues');
+        console.warn('    Error during test:', testError.message);
+      } else {
+        throw testError;
+      }
+    }
   } catch (error) {
-    console.error('Failed to initialize ReBAC client:', error);
+    console.error('Failed to initialize ReBAC client:', error.message || error);
     isRebacAvailable = false;
+    e10sClient = null;
   }
 }
 
@@ -125,9 +144,21 @@ const canUserAccessDocument = async (userId, documentId, action) => {
       }
     );
 
-    return result.result;
+    // Handle the monitoring error - check if result exists and has the expected structure
+    if (!result || typeof result !== 'object') {
+      console.error('Invalid response from Entitlements Client:', result);
+      throw new Error('Invalid entitlements response');
+    }
+
+    return result.result || false;
   } catch (error) {
-    console.error('ReBAC check failed:', error);
+    // Handle the specific monitoring error
+    if (error.message && error.message.includes('Cannot read properties of undefined')) {
+      console.error('Entitlements Client error - likely version mismatch or agent not ready:', error.message);
+    } else {
+      console.error('ReBAC check failed:', error.message || error);
+    }
+    
     // Fall back to ownership check on error
     if (action === 'write' || action === 'delete' || action === 'share') {
       const Document = require('../models/document');
@@ -136,9 +167,11 @@ const canUserAccessDocument = async (userId, documentId, action) => {
         if (!doc) return false;
         return doc.ownerId === userId;
       } catch (fallbackError) {
+        console.error('Fallback check also failed:', fallbackError);
         return false;
       }
     }
+    // For read action in fallback mode, allow access
     return action === 'read';
   }
 };

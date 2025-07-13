@@ -2,22 +2,21 @@
 
 This is the Node.js/Express backend for the Frontegg Demo Application, providing secure API endpoints demonstrating JWT authentication, permission-based authorization, and ReBAC (Relationship-Based Access Control).
 
-📚 **Frontegg Backend Documentation**: [Node.js SDK Guide](https://docs.frontegg.com/docs/frontegg-nodejs-client) | [Backend Protection](https://docs.frontegg.com/docs/sdk-backend-protection)
+📚 **Frontegg Backend Documentation**: [Node.js SDK Guide](https://developers.frontegg.com/sdks/backend/node/node-integrate) | [Backend Protection](https://docs.frontegg.com/docs/sdk-backend-protection)
 
 ## Overview
 
 The backend showcases production-ready patterns for:
-- JWT token verification with Frontegg - [JWT Verification Guide](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
+- JWT token verification with Frontegg - [JWT Verification Guide](https://developers.frontegg.com/guides/integrations/protect-backend-api/validate-jwt#validate-jwt-token-without-frontegg-middleware)
 - Permission-based API protection - [Permissions Guide](https://developers.frontegg.com/guides/authorization/rbac/permissions)
 - ReBAC integration for fine-grained access control - [ReBAC Documentation](https://developers.frontegg.com/guides/authorization/rebac)
-- Multi-tenant data isolation - [Multi-Tenancy Architecture](https://docs.frontegg.com/docs/vendor-tenant-users-in-frontegg)
 - Secure user-to-user interactions
 
 ## Prerequisites
 
 - Node.js 16+ and npm
 - Docker and Docker Compose (for ReBAC features)
-- Frontegg account with API credentials - [Getting Started](https://docs.frontegg.com/reference/getting-started-with-your-api)
+- Frontegg account with API credentials - [Getting Started](https://developers.frontegg.com/api/overview)
 
 ## Environment Configuration
 
@@ -270,12 +269,34 @@ docker-compose up -d
 2. Verify ReBAC configuration for documents
 3. Ensure Docker services are running
 
+### ReBAC Documents Not Persisting (403 Error)
+If documents disappear after refresh with 403 errors in logs:
+
+1. **Check ReBAC configuration in Frontegg Portal**:
+   - Go to [Environment] → Entitlements → ReBAC
+   - Ensure the document entity, relations, and actions are configured
+
+2. **Verify the Entitlements Agent is running**:
+   ```bash
+   docker ps  # Should show frontegg-entitlements-agent
+   ```
+
+3. **Check the trace ID in error logs**:
+   - The backend now logs Frontegg trace IDs from 403 errors
+   - Use these IDs to look up specific errors in Frontegg's logs
+
+4. **Test with user token**:
+   ```bash
+   node test-user-token.js YOUR_JWT_TOKEN
+   ```
+
+**Important**: ReBAC uses user JWT tokens to create associations. Each user can only create relationships for resources they own. The backend automatically extracts the user's token from the Authorization header to manage document permissions.
+
 ## Learn More
 
 ### Frontegg Documentation
-- [Node.js SDK Reference](https://docs.frontegg.com/docs/frontegg-nodejs-client)
-- [Backend Protection Guide](https://docs.frontegg.com/docs/sdk-backend-protection)
-- [JWT Verification](https://docs.frontegg.com/docs/using-public-key-to-verify-jwt)
+- [Node.js SDK Reference](https://developers.frontegg.com/sdks/backend/node/node-integrate)
+- [JWT Verification](https://developers.frontegg.com/guides/integrations/protect-backend-api/validate-jwt#validate-jwt-token-without-frontegg-middleware)
 - [Permissions & Roles](https://developers.frontegg.com/guides/authorization/rbac/permissions)
 - [ReBAC Guide](https://developers.frontegg.com/guides/authorization/rebac)
 - [API Protection](https://developers.frontegg.com/guides/integrations/protect-backend-api/overview)
