@@ -22,6 +22,18 @@
   margin: 0;
 }
 
+.api-header a {
+  color: #4d7dfa;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.api-header a:hover {
+  color: #3a6ae5;
+  text-decoration: underline;
+}
+
 .api-content {
   display: flex;
   flex-direction: column;

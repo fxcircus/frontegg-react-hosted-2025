@@ -6,7 +6,7 @@ import './APIPlayground.css';
 const APIPlayground = () => {
   const { user } = useAuth();
   const [selectedEndpoint, setSelectedEndpoint] = useState('GET');
-  const [url, setUrl] = useState('/identity/resources/users/v2');
+  const [url, setUrl] = useState('/identity/resources/users/v3/me');
   const [requestBody, setRequestBody] = useState('');
   const [response, setResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,24 +18,25 @@ const APIPlayground = () => {
 
   // Common Frontegg API endpoints organized by category
   const commonEndpoints = [
+    // Users & Profile
+    { method: 'GET', path: '/identity/resources/users/v3/me', description: 'Get current user profile', category: 'users' },
+    { method: 'POST', path: '/identity/resources/auth/v1/api-token', description: 'Create API token (requires clientId & secret)', category: 'auth', requestBody: '{\n  "clientId": "your-client-id",\n  "secret": "your-api-key"\n}' },
+    { method: 'GET', path: '/identity/resources/users/v2/me/tenants', description: 'Get user\'s tenants', category: 'users' },
     { method: 'GET', path: '/identity/resources/users/v2', description: 'List all users', category: 'users' },
-    { method: 'GET', path: '/identity/resources/me', description: 'Get current user', category: 'users' },
-    { method: 'POST', path: '/identity/resources/users/v2', description: 'Create new user', category: 'users' },
-    { method: 'GET', path: '/identity/resources/tenants/v1', description: 'List tenants', category: 'tenants' },
-    { method: 'GET', path: '/identity/resources/tenants/hierarchy', description: 'Get tenant hierarchy', category: 'tenants' },
-    { method: 'GET', path: '/identity/resources/roles/v1', description: 'List roles', category: 'auth' },
-    { method: 'GET', path: '/identity/resources/permissions/v1', description: 'List permissions', category: 'auth' },
-    { method: 'POST', path: '/identity/resources/auth/v1/api-token', description: 'Create API token', category: 'auth' },
-    { method: 'GET', path: '/audits/v1', description: 'Get audit logs', category: 'audit' },
-    { method: 'GET', path: '/audits/v1/stats', description: 'Get audit statistics', category: 'audit' },
+    { method: 'PUT', path: '/identity/resources/users/v1', description: 'Update user information', category: 'users' },
+    { method: 'DELETE', path: '/identity/resources/users/v1/{userId}', description: 'Remove user', category: 'users' },
+    
+    // Roles & Permissions
+    { method: 'GET', path: '/identity/resources/roles/v1', description: 'List all roles', category: 'roles' },
+    { method: 'POST', path: '/identity/resources/roles/v1', description: 'Create new role', category: 'roles' },
+    { method: 'GET', path: '/identity/resources/permissions/v1', description: 'List all permissions', category: 'roles' },
   ];
 
   const categories = [
     { value: 'all', label: 'All Endpoints' },
-    { value: 'users', label: 'Users' },
-    { value: 'tenants', label: 'Tenants' },
-    { value: 'auth', label: 'Auth & Roles' },
-    { value: 'audit', label: 'Audit' },
+    { value: 'users', label: 'Users & Profile' },
+    { value: 'roles', label: 'Roles & Permissions' },
+    { value: 'auth', label: 'Authentication' },
   ];
 
   const filteredEndpoints = selectedCategory === 'all' 
@@ -140,8 +141,13 @@ const APIPlayground = () => {
   return (
     <div className="api-playground">
       <div className="api-header">
-        <h1>API Playground</h1>
-        <p>Test Frontegg APIs with your current authentication</p>
+        <h1>Frontegg APIs</h1>
+        <p>
+          This demonstrates how to use the user's JWT token to call Frontegg's APIs directly from your application.{' '}
+          <a href="https://developers.frontegg.com/api/overview" target="_blank" rel="noopener noreferrer">
+            View API Documentation →
+          </a>
+        </p>
       </div>
 
       <div className="api-content">
@@ -188,6 +194,11 @@ const APIPlayground = () => {
                   onClick={() => {
                     setSelectedEndpoint(endpoint.method);
                     setUrl(endpoint.path);
+                    if (endpoint.requestBody) {
+                      setRequestBody(endpoint.requestBody);
+                    } else {
+                      setRequestBody('');
+                    }
                   }}
                 >
                   <span className={`method-badge ${endpoint.method.toLowerCase()}`}>

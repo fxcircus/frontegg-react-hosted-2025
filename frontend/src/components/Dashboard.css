@@ -214,3 +214,14 @@
     font-size: 0.75rem;
   }
 }
+
+/* Empty activity state */
+.activity-list .activity-item:only-child .activity-content p {
+  color: var(--gray-600);
+  font-style: italic;
+}
+
+.activity-list .activity-item:only-child .activity-content time {
+  color: var(--gray-500);
+  font-style: normal;
+}

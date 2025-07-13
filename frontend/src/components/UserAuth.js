@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth, useStepUp, useIsSteppedUp, useFeatureEntitlements, usePermissionEntitlements } from "@frontegg/react";
+import { useAuth, useStepUp, useIsSteppedUp, useFeatureEntitlements, usePermissionEntitlements, useAuthActions } from "@frontegg/react";
 import { jwtDecode } from "jwt-decode";
 import Card from './Card';
 import Toast from './Toast';
@@ -7,6 +7,7 @@ import './UserAuth.css';
 
 const UserAuth = () => {
   const { user } = useAuth();
+  const { requestAuthorize } = useAuthActions();
   const [showDecodedToken, setShowDecodedToken] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const stepUp = useStepUp();
@@ -133,16 +134,29 @@ const UserAuth = () => {
               </span>
             )}
           </div>
-          <div className="token-toggle">
-            <span className="toggle-label">Show Decoded</span>
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={showDecodedToken}
-                onChange={(e) => setShowDecodedToken(e.target.checked)}
-              />
-              <span className="toggle-slider"></span>
-            </label>
+          <div className="token-actions">
+            <button 
+              className="refresh-token-btn" 
+              onClick={() => {
+                requestAuthorize();
+                // Dispatch custom event for activity tracking
+                window.dispatchEvent(new CustomEvent('frontegg-token-refreshed'));
+              }}
+              title="Refresh JWT token"
+            >
+              Refresh Token
+            </button>
+            <div className="token-toggle">
+              <span className="toggle-label">Show Decoded</span>
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={showDecodedToken}
+                  onChange={(e) => setShowDecodedToken(e.target.checked)}
+                />
+                <span className="toggle-slider"></span>
+              </label>
+            </div>
           </div>
         </div>
 

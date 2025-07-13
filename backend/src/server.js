@@ -3,6 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const sequelize = require('./models/database');
+const { activateErrorSuppression } = require('./utils/suppressMonitoringErrors');
+
+// Activate error suppression for monitoring errors
+activateErrorSuppression();
 
 // Import middleware and services
 const { authenticate, verifyToken } = require('./middleware/auth');

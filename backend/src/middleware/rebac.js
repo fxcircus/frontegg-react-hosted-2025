@@ -36,21 +36,9 @@ async function initializeReBACClient(pdpHost) {
       pdpHost: host
     });
     
-    // Test the client with a simple query to ensure it's working
-    try {
-      await e10sClient.isEntitledTo(
-        { entityType: 'user', key: 'test-init' },
-        { type: RequestContextType.Entity, entityType: 'document', key: 'test-init', action: 'read' }
-      );
-      console.log('✅ ReBAC client initialized and tested successfully at', host);
-    } catch (testError) {
-      if (testError.message && testError.message.includes('monitoring')) {
-        console.warn('⚠️  ReBAC client initialized but may have compatibility issues');
-        console.warn('    Error during test:', testError.message);
-      } else {
-        throw testError;
-      }
-    }
+    // Don't test the client during initialization to avoid monitoring errors
+    console.log('✅ ReBAC client initialized at', host);
+    isRebacAvailable = true;
   } catch (error) {
     console.error('Failed to initialize ReBAC client:', error.message || error);
     isRebacAvailable = false;
@@ -144,13 +132,25 @@ const canUserAccessDocument = async (userId, documentId, action) => {
       }
     );
 
-    // Handle the monitoring error - check if result exists and has the expected structure
-    if (!result || typeof result !== 'object') {
-      console.error('Invalid response from Entitlements Client:', result);
-      throw new Error('Invalid entitlements response');
+    // Handle various response formats from the entitlements client
+    if (result === true || result === false) {
+      return result;
+    }
+    
+    if (result && typeof result === 'object') {
+      // Check for result property
+      if ('result' in result) {
+        return result.result || false;
+      }
+      // Check for entitled property
+      if ('entitled' in result) {
+        return result.entitled || false;
+      }
     }
 
-    return result.result || false;
+    // If we can't determine the result, log it and return false
+    console.warn('Unexpected response format from Entitlements Client:', result);
+    return false;
   } catch (error) {
     // Handle the specific monitoring error
     if (error.message && error.message.includes('Cannot read properties of undefined')) {

@@ -8,11 +8,9 @@ import {
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import UserAuth from './components/UserAuth';
-import EntitlementsInfo from './components/EntitlementsInfo';
 import TenantHierarchySwitcher from './components/TenantHierarchySwitcher';
 import TenantMetadata from './components/TenantMetadata';
 import APIPlayground from './components/APIPlayground';
-import AdminPortal from './components/AdminPortal';
 import DocumentManager from './components/DocumentManager/DocumentManager';
 import Pokemon from './components/Pokemon/Pokemon';
 import JWTVerifier from './components/JWTVerifier/JWTVerifier';
@@ -20,7 +18,11 @@ import JWTVerifier from './components/JWTVerifier/JWTVerifier';
 function App() {
   const { isAuthenticated } = useAuth();
   const loginWithRedirect = useLoginWithRedirect();
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState(() => {
+    // Load last active section from localStorage
+    const savedSection = localStorage.getItem('activeSection');
+    return savedSection || 'dashboard';
+  });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -28,6 +30,11 @@ function App() {
       loginWithRedirect({});
     }
   }, [isAuthenticated, loginWithRedirect]);
+  
+  // Save active section to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('activeSection', activeSection);
+  }, [activeSection]);
 
   const renderContent = () => {
     switch (activeSection) {

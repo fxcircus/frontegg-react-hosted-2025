@@ -52,13 +52,10 @@ const TenantSelector = ({ isCollapsed }) => {
         aria-label="Select tenant"
       >
         {!isCollapsed && (
-          <>
-            <div className="tenant-info">
-              <span className="tenant-label">Current Tenant</span>
-              <span className="tenant-name">{selectedTenant?.name || 'Select Tenant'}</span>
-            </div>
-            <div className="tenant-meta">
-              <span className="tenant-count">{tenants.length} {tenants.length === 1 ? 'tenant' : 'tenants'}</span>
+          <div className="tenant-info">
+            <span className="tenant-label">Current Tenant</span>
+            <span className="tenant-name">
+              {selectedTenant?.name || 'Select Tenant'}
               <svg 
                 className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}
                 width="12" 
@@ -67,8 +64,8 @@ const TenantSelector = ({ isCollapsed }) => {
               >
                 <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="2" fill="none"/>
               </svg>
-            </div>
-          </>
+            </span>
+          </div>
         )}
         {isCollapsed && (
           <div className="tenant-icon" title={selectedTenant?.name}>

@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
-import { useAuth, AdminPortal, ContextHolder } from "@frontegg/react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { AdminPortal, ContextHolder } from "@frontegg/react";
 import TenantSelector from './TenantSelector';
 import './Sidebar.css';
 
 const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileClose }) => {
-  const { user } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const location = useLocation();
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
     { id: 'user', label: 'User & Auth', icon: '👤' },
     { id: 'tenants', label: 'Tenants', icon: '🏢' },
-    { id: 'documents', label: 'Documents (ReBAC)', icon: '📄' },
+    { id: 'documents', label: 'ReBAC (FGA)', icon: '📄' },
     { id: 'pokemon', label: 'Backend SDK', icon: '🔒' },
     { id: 'jwt-verifier', label: 'JWT Verifier', icon: '🔐' },
     // { id: 'admin', label: 'Embedded Components', icon: '⚙️' },
-    { id: 'api', label: 'API Playground', icon: '🚀' },
+    { id: 'api', label: 'Frontegg APIs', icon: '🚀' },
   ];
 
   const showAdminPortal = () => {

@@ -276,6 +276,33 @@
   color: var(--gray-600);
 }
 
+.token-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.refresh-token-btn {
+  padding: 6px 14px;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.refresh-token-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(77, 125, 250, 0.25);
+}
+
+.refresh-token-btn:active {
+  transform: translateY(0);
+}
+
 .token-toggle {
   display: flex;
   align-items: center;

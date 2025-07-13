@@ -1,5 +1,5 @@
-import React from 'react';
-import { useAuth, useIsSteppedUp, AdminPortal } from "@frontegg/react";
+import React, { useState, useEffect } from 'react';
+import { useAuth, useIsSteppedUp, useAuthActions, useTenantsState } from "@frontegg/react";
 import { jwtDecode } from "jwt-decode";
 import StatsCard from './StatsCard';
 import Card from './Card';
@@ -7,7 +7,103 @@ import './Dashboard.css';
 
 const Dashboard = ({ onSectionChange }) => {
   const { user } = useAuth();
+  const { tenants } = useTenantsState();
   const isSteppedUp = useIsSteppedUp({ maxAge: 60 });
+  const [activities, setActivities] = useState(() => {
+    // Load activities from localStorage on mount
+    const savedActivities = localStorage.getItem('userActivities');
+    return savedActivities ? JSON.parse(savedActivities) : [];
+  });
+  
+  // Helper function to add activity
+  const addActivity = (activity) => {
+    const newActivity = {
+      ...activity,
+      timestamp: new Date().toISOString(),
+      id: Date.now()
+    };
+    setActivities(prev => {
+      const updated = [newActivity, ...prev].slice(0, 10); // Keep only last 10 activities
+      localStorage.setItem('userActivities', JSON.stringify(updated));
+      return updated;
+    });
+  };
+  
+  // Track authentication on mount
+  useEffect(() => {
+    if (user && activities.length === 0) {
+      addActivity({
+        type: 'auth',
+        icon: '🔐',
+        message: 'Successfully authenticated',
+        userId: user.id
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
+  // Track tenant switches
+  useEffect(() => {
+    if (user?.tenantId && activities.length > 0) {
+      const lastActivity = activities[0];
+      if (!lastActivity || lastActivity.tenantId !== user.tenantId) {
+        const tenant = tenants?.find(t => t.tenantId === user.tenantId);
+        addActivity({
+          type: 'tenant',
+          icon: '🏢',
+          message: `Switched to tenant: ${tenant?.name || user.tenantId}`,
+          tenantId: user.tenantId
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.tenantId, tenants]);
+  
+  // Listen for token refresh events
+  useEffect(() => {
+    const handleTokenRefresh = () => {
+      addActivity({
+        type: 'token',
+        icon: '🔑',
+        message: 'Token refreshed',
+        userId: user?.id
+      });
+    };
+    
+    // Add event listener for custom token refresh event
+    window.addEventListener('frontegg-token-refreshed', handleTokenRefresh);
+    
+    return () => {
+      window.removeEventListener('frontegg-token-refreshed', handleTokenRefresh);
+    };
+  }, [user]);
+  
+  // Update times every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Force re-render to update relative times
+      setActivities(prev => [...prev]);
+    }, 60000); // Update every minute
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  // Format relative time
+  const formatRelativeTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    
+    if (diffSeconds < 60) return 'Just now';
+    if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    return date.toLocaleDateString();
+  };
   
   // Get token expiration
   const getTokenExpiry = () => {
@@ -50,8 +146,10 @@ const Dashboard = ({ onSectionChange }) => {
       trend: tokenExpiry?.hoursLeft > 12 ? 'up' : 'down'
     },
     {
-      label: 'User Role',
-      value: user?.roles?.[0]?.name || user?.roles?.[0]?.key || 'No Role',
+      label: user?.roles?.length > 1 ? 'User Roles' : 'User Role',
+      value: user?.roles?.length > 0 
+        ? user.roles.map(role => role.name || role.key).join(', ')
+        : 'No Role',
       icon: '👤',
       color: 'secondary',
       trend: 'neutral'
@@ -96,27 +194,25 @@ const Dashboard = ({ onSectionChange }) => {
         {/* Recent Activity Card */}
         <Card title="Recent Activity" className="dashboard-activity-card">
           <div className="activity-list">
-            <div className="activity-item">
-              <span className="activity-icon">🔐</span>
-              <div className="activity-content">
-                <p>Successfully authenticated</p>
-                <time>Just now</time>
+            {activities.length > 0 ? (
+              activities.slice(0, 5).map(activity => (
+                <div key={activity.id} className="activity-item">
+                  <span className="activity-icon">{activity.icon}</span>
+                  <div className="activity-content">
+                    <p>{activity.message}</p>
+                    <time>{formatRelativeTime(activity.timestamp)}</time>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="activity-item">
+                <span className="activity-icon">📝</span>
+                <div className="activity-content">
+                  <p>No recent activity</p>
+                  <time>Start using the app to see activity</time>
+                </div>
               </div>
-            </div>
-            <div className="activity-item">
-              <span className="activity-icon">🏢</span>
-              <div className="activity-content">
-                <p>Switched to tenant: {user?.tenantId}</p>
-                <time>5 minutes ago</time>
-              </div>
-            </div>
-            <div className="activity-item">
-              <span className="activity-icon">🔑</span>
-              <div className="activity-content">
-                <p>Token refreshed</p>
-                <time>1 hour ago</time>
-              </div>
-            </div>
+            )}
           </div>
         </Card>
 

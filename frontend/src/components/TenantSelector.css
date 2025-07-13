@@ -7,10 +7,10 @@
 .tenant-selector-button {
   width: 100%;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: white;
+  border: 1px solid var(--gray-200);
   border-radius: var(--border-radius);
-  color: white;
+  color: var(--gray-900);
   cursor: pointer;
   transition: var(--transition);
   display: flex;
@@ -19,14 +19,13 @@
   gap: 12px;
   text-align: left;
   position: relative;
-  backdrop-filter: blur(10px);
 }
 
 .tenant-selector-button:hover {
-  background: rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: var(--gray-50);
+  border-color: var(--gray-300);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .tenant-selector-button:active {
@@ -50,7 +49,7 @@
   font-weight: 700;
   font-size: 1rem;
   color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(91, 104, 245, 0.3);
 }
 
 /* Expanded state */
@@ -67,35 +66,25 @@
   opacity: 1;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--gray-600);
+  font-weight: 500;
 }
 
 .tenant-name {
   font-size: 1rem;
   font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.tenant-meta {
+  color: var(--gray-900);
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.tenant-count {
-  font-size: 0.75rem;
-  opacity: 0.8;
-  white-space: nowrap;
-  color: rgba(255, 255, 255, 0.8);
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
 }
 
 .dropdown-arrow {
   transition: transform 0.3s ease;
+  color: var(--gray-500);
+  flex-shrink: 0;
 }
 
 .dropdown-arrow.open {
@@ -184,7 +173,8 @@
 .tenant-item-icon {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, rgba(91, 104, 245, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+  background: var(--gray-100);
+  color: var(--gray-700);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -196,6 +186,7 @@
 
 .tenant-item.active .tenant-item-icon {
   background: var(--gradient-primary);
+  color: white;
 }
 
 .tenant-item-info {
