@@ -49,23 +49,21 @@ Complete the initial onboarding form and note down your Client ID and API Key fr
 
 ## Environment Configuration
 
-1. Create a `.env` file in the root directory of the project.
+1. Create a `.env` file in the frontend directory (you can copy from `.env.example`).
 
 2. Add your Frontegg credentials to the `.env` file:
 
    ```plaintext
-   # Found in the Keys & Domains page
-   REACT_APP_CLIENT_ID=[YOUR-CLIENT-ID]
-
-   # Found in the Applications page under your application
-   REACT_APP_BASE_URL=https://[YOUR_SUBDOMAIN].frontegg.com
-   REACT_APP_APP_ID=[APPLICATION_ID]
-   
-   # Backend URL for API calls
-   REACT_APP_BACKEND_URL=http://localhost:5000
+   # Frontegg Configuration (Required)
+   # Get these from: Frontegg Portal → [Environment] → Settings → API Keys
+   REACT_APP_BASE_URL=https://app-xxx.frontegg.com
+   REACT_APP_CLIENT_ID=your-client-id-here
+   REACT_APP_APP_ID=your-app-id-here
    ```
 
 3. Save the file.
+
+   **Note:** The backend URL defaults to `http://localhost:5000` and doesn't need to be configured unless you're running the backend on a different port.
 
 ## Running the Application
 

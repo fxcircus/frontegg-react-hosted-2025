@@ -27,6 +27,12 @@ Create a `.env` file in the backend directory:
 FRONTEGG_CLIENT_ID=your_client_id
 FRONTEGG_API_KEY=your_api_key
 FRONTEGG_BASE_URL=https://app-xxx.frontegg.com
+FRONTEGG_REGION=eu  # Options: eu, us, au, ca
+
+# Frontegg API Token for Entitlements Agent (Required for Docker)
+# Get these from: Frontegg Portal → Administration → Personal Tokens
+FRONTEGG_API_TOKEN_CLIENT_ID=your_personal_token_client_id
+FRONTEGG_API_TOKEN_SECRET=your_personal_token_secret
 
 # Server Configuration
 PORT=5000
@@ -180,8 +186,14 @@ npm run dev  # Database recreates automatically
 The `docker-compose.yml` starts:
 - **Frontegg Entitlements Agent**: Local ReBAC policy engine
   - Port: 8181
-  - Health checks included
+  - Health checks included (with bundles verification)
   - Auto-restarts on failure
+  - Requires personal API tokens for authentication
+  - Uses official Frontegg configuration:
+    - `FRONTEGG_CLIENT_ID`
+    - `FRONTEGG_CLIENT_CREDENTIALS_OAUTH_CLIENT_ID`
+    - `FRONTEGG_CLIENT_CREDENTIALS_OAUTH_SECRET`
+    - `FRONTEGG_REGION`
 
 ## Error Handling
 
