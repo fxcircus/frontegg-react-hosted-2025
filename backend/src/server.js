@@ -145,6 +145,19 @@ app.delete('/api/documents/:id/share/:userId', authenticate, checkSharer(), (req
   documentController.revokeAccess(req, res)
 );
 
+// Admin/Demo endpoints - bypass entitlements for demonstration purposes
+app.get('/api/documents/admin/all', authenticate, (req, res) => 
+  documentController.getAllDocuments(req, res)
+);
+
+app.delete('/api/documents/admin/all', authenticate, (req, res) => 
+  documentController.deleteAllDocuments(req, res)
+);
+
+app.post('/api/documents/admin/seed', authenticate, (req, res) => 
+  documentController.seedDemoDocuments(req, res)
+);
+
 // Permission check endpoint (for frontend use)
 app.post('/api/permissions/check', authenticate, async (req, res) => {
   try {
@@ -164,6 +177,52 @@ app.post('/api/permissions/check', authenticate, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: 'Failed to check permission'
+    });
+  }
+});
+
+// Check permissions for all documents
+app.post('/api/permissions/check-all', authenticate, async (req, res) => {
+  try {
+    const userId = req.frontegg.user.sub;
+    const { action = 'read' } = req.body;
+    
+    console.log(`[ADMIN] Checking ${action} permissions for all documents for user ${userId}`);
+    
+    const Document = require('./models/document');
+    const { canUserAccessDocument } = require('./middleware/rebac');
+    
+    // Get all documents
+    const allDocuments = await Document.findAll();
+    
+    // Check permissions for each document
+    const permissionResults = await Promise.all(
+      allDocuments.map(async (doc) => {
+        const hasPermission = await canUserAccessDocument(userId, doc.id, action);
+        return {
+          documentId: doc.id,
+          title: doc.title,
+          ownerId: doc.ownerId,
+          hasPermission,
+          isOwner: doc.ownerId === userId
+        };
+      })
+    );
+    
+    const accessibleCount = permissionResults.filter(r => r.hasPermission).length;
+    
+    res.json({
+      success: true,
+      userId,
+      action,
+      totalDocuments: allDocuments.length,
+      accessibleDocuments: accessibleCount,
+      results: permissionResults
+    });
+  } catch (error) {
+    console.error('Error checking all permissions:', error);
+    res.status(500).json({
+      error: 'Failed to check permissions'
     });
   }
 });

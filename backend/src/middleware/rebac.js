@@ -119,6 +119,8 @@ const canUserAccessDocument = async (userId, documentId, action) => {
   }
 
   try {
+    console.log(`[ReBAC] Checking permission: User ${userId} -> Document ${documentId} -> Action: ${action}`);
+    
     const result = await e10sClient.isEntitledTo(
       { 
         entityType: 'user', 
@@ -133,24 +135,28 @@ const canUserAccessDocument = async (userId, documentId, action) => {
     );
 
     // Handle various response formats from the entitlements client
-    if (result === true || result === false) {
-      return result;
-    }
+    let isEntitled = false;
     
-    if (result && typeof result === 'object') {
+    if (result === true || result === false) {
+      isEntitled = result;
+    } else if (result && typeof result === 'object') {
       // Check for result property
       if ('result' in result) {
-        return result.result || false;
+        isEntitled = result.result || false;
       }
       // Check for entitled property
-      if ('entitled' in result) {
-        return result.entitled || false;
+      else if ('entitled' in result) {
+        isEntitled = result.entitled || false;
       }
     }
-
-    // If we can't determine the result, log it and return false
-    console.warn('Unexpected response format from Entitlements Client:', result);
-    return false;
+    
+    // If we couldn't determine the result format, log warning
+    if (!result && result !== false) {
+      console.warn('Unexpected response format from Entitlements Client:', result);
+    }
+    
+    console.log(`[ReBAC] Permission result: ${isEntitled ? 'GRANTED' : 'DENIED'}`);
+    return isEntitled;
   } catch (error) {
     // Handle the specific monitoring error
     if (error.message && error.message.includes('Cannot read properties of undefined')) {

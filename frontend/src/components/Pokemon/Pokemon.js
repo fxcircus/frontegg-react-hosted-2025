@@ -69,12 +69,8 @@ const Pokemon = () => {
   };
 
   const fetchMyPokemon = async () => {
-    // Skip if we already know user doesn't have permission
-    if (!permissions.canView) {
-      // Re-check permissions in case they changed
-      checkPermissions();
-      return;
-    }
+    // Always try to fetch, even without permissions, to show actual backend response
+    // This helps demonstrate how the backend SDK protects the API
     
     setLoading(true);
     try {
@@ -91,7 +87,17 @@ const Pokemon = () => {
       } else {
         const error = await response.json();
         if (response.status === 403) {
-          showToast('You need the "pokemon.view" permission to see your collection', 'error');
+          showToast(
+            <div>
+              <div>🚫 Permission Denied (403)</div>
+              <div className="error-details">Backend Response: {error.message || 'You need the "pokemon.view" permission'}</div>
+              <div className="error-hint">The backend SDK validated your JWT and found missing permissions</div>
+            </div>,
+            'error'
+          );
+          // Clear pokemon list when permission denied
+          setPokemon([]);
+          setStats(null);
         } else {
           showToast(error.message || 'Failed to load Pokemon', 'error');
         }
@@ -135,7 +141,14 @@ const Pokemon = () => {
         }
       } else {
         if (response.status === 403) {
-          showToast('You need the "pokemon.catch" permission to catch Pokemon', 'error');
+          showToast(
+            <div>
+              <div>🚫 Permission Denied (403)</div>
+              <div className="error-details">Backend Response: {data.message || 'You need the "pokemon.catch" permission'}</div>
+              <div className="error-hint">This is Frontegg's SDK protecting your backend API</div>
+            </div>,
+            'error'
+          );
         } else {
           showToast(data.message || 'Failed to catch Pokemon', 'error');
         }
@@ -180,7 +193,18 @@ const Pokemon = () => {
         fetchMyPokemon();
         setTradeUserId('');
       } else {
-        showToast(data.message || 'Trade failed', 'error');
+        if (response.status === 403) {
+          showToast(
+            <div>
+              <div>🚫 Permission Denied (403)</div>
+              <div className="error-details">Backend Response: {data.message || 'You need the "pokemon.trade" permission'}</div>
+              <div className="error-hint">This is Frontegg's SDK protecting your backend API</div>
+            </div>,
+            'error'
+          );
+        } else {
+          showToast(data.message || 'Trade failed', 'error');
+        }
       }
     } catch (error) {
       showToast('Failed to complete trade', 'error');
@@ -269,16 +293,16 @@ const Pokemon = () => {
           <p>This endpoint demonstrates permission-protected API access.</p>
           <Button
             onClick={catchPokemon}
-            disabled={catching || !permissions.canCatch}
+            disabled={catching}
             variant="primary"
           >
             {catching ? 'Calling API...' : 'Try API Call'}
           </Button>
           {!permissions.canCatch && (
             <div className="permission-denied-info">
-              <p className="permission-hint">❌ Permission Denied</p>
+              <p className="permission-hint">⚠️ Missing Permission</p>
               <p className="permission-explanation">Your JWT token doesn't include the "pokemon.catch" permission.</p>
-              <p className="permission-fix">To enable: Add this permission to your role in Frontegg Portal → Authorization → Permissions</p>
+              <p className="permission-fix">Click "Try API Call" to see the actual backend error response.</p>
             </div>
           )}
         </Card>
@@ -295,11 +319,10 @@ const Pokemon = () => {
               placeholder="Enter user ID"
               value={tradeUserId}
               onChange={(e) => setTradeUserId(e.target.value)}
-              disabled={!permissions.canTrade}
             />
             <Button
               onClick={tradePokemon}
-              disabled={trading || !permissions.canTrade || !tradeUserId}
+              disabled={trading || !tradeUserId}
               variant="secondary"
             >
               {trading ? 'Calling API...' : 'Try API Call'}
@@ -307,9 +330,9 @@ const Pokemon = () => {
           </div>
           {!permissions.canTrade && (
             <div className="permission-denied-info">
-              <p className="permission-hint">❌ Permission Denied</p>
+              <p className="permission-hint">⚠️ Missing Permission</p>
               <p className="permission-explanation">Your JWT token doesn't include the "pokemon.trade" permission.</p>
-              <p className="permission-fix">To enable: Add this permission to your role in Frontegg Portal</p>
+              <p className="permission-fix">Click "Try API Call" to see the actual backend error response.</p>
             </div>
           )}
         </Card>
@@ -342,13 +365,16 @@ const Pokemon = () => {
         </div>
         {loading ? (
           <LoadingSpinner />
-        ) : !permissions.canView ? (
-          <div className="no-permission">
-            <p>You need the "pokemon.view" permission to see your collection</p>
-          </div>
         ) : pokemon.length === 0 ? (
           <div className="empty-collection">
-            <p>No Pokemon yet! Start catching some!</p>
+            {!permissions.canView ? (
+              <>
+                <p>⚠️ Missing "pokemon.view" permission</p>
+                <p style={{fontSize: '0.9rem', color: '#888'}}>The backend API denied access. This collection would show your Pokemon if you had permission.</p>
+              </>
+            ) : (
+              <p>No Pokemon yet! Start catching some!</p>
+            )}
           </div>
         ) : (
           <div className="pokemon-grid">

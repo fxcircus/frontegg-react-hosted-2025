@@ -259,6 +259,133 @@ class DocumentController {
       });
     }
   }
+
+  // ADMIN DEMO ENDPOINTS - Bypass entitlements for demo purposes
+
+  // Get ALL documents in database (admin/demo only)
+  async getAllDocuments(req, res) {
+    try {
+      console.log('[ADMIN] Fetching ALL documents from database (bypassing entitlements)');
+      const allDocuments = await Document.findAll({
+        order: [['created_at', 'DESC']]
+      });
+      
+      res.json({
+        success: true,
+        documents: allDocuments,
+        totalCount: allDocuments.length,
+        warning: 'This endpoint bypasses entitlements and shows ALL documents'
+      });
+    } catch (error) {
+      console.error('Error getting all documents:', error);
+      res.status(500).json({
+        error: 'Failed to get all documents'
+      });
+    }
+  }
+
+  // Delete ALL documents (admin/demo only)
+  async deleteAllDocuments(req, res) {
+    try {
+      console.log('[ADMIN] Deleting ALL documents from database');
+      const count = await Document.destroy({
+        where: {},
+        truncate: true
+      });
+      
+      res.json({
+        success: true,
+        message: `Deleted ${count} documents`,
+        warning: 'All documents have been permanently deleted'
+      });
+    } catch (error) {
+      console.error('Error deleting all documents:', error);
+      res.status(500).json({
+        error: 'Failed to delete all documents'
+      });
+    }
+  }
+
+  // Seed demo documents (admin/demo only)
+  async seedDemoDocuments(req, res) {
+    try {
+      console.log('[ADMIN] Seeding demo documents');
+      
+      // Clear existing documents first
+      await Document.destroy({
+        where: {},
+        truncate: true
+      });
+
+      // Create demo documents with memorable IDs
+      const demoDocuments = [
+        {
+          id: 'doc-001',
+          title: 'Company Strategy 2024',
+          content: 'This document outlines our strategic goals and initiatives for 2024...',
+          ownerId: req.frontegg.user.sub,
+          tags: ['strategy', 'confidential', '2024']
+        },
+        {
+          id: 'doc-002',
+          title: 'Q4 Financial Report',
+          content: 'Financial performance metrics and analysis for Q4...',
+          ownerId: req.frontegg.user.sub,
+          tags: ['finance', 'quarterly', 'reports']
+        },
+        {
+          id: 'doc-003',
+          title: 'Engineering Roadmap',
+          content: 'Technical roadmap and feature planning for the engineering team...',
+          ownerId: req.frontegg.user.sub,
+          tags: ['engineering', 'roadmap', 'planning']
+        },
+        {
+          id: 'doc-004',
+          title: 'Marketing Campaign Brief',
+          content: 'Overview of the upcoming marketing campaign and target audience...',
+          ownerId: req.frontegg.user.sub,
+          tags: ['marketing', 'campaign', 'brief']
+        },
+        {
+          id: 'doc-005',
+          title: 'Product Requirements Document',
+          content: 'Detailed requirements for the new product feature set...',
+          ownerId: req.frontegg.user.sub,
+          tags: ['product', 'requirements', 'specifications']
+        }
+      ];
+
+      const createdDocuments = await Document.bulkCreate(demoDocuments);
+      
+      // Try to assign owner relations in ReBAC (but don't fail if it doesn't work)
+      const authHeader = req.headers.authorization;
+      const userToken = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
+      
+      if (userToken) {
+        for (const doc of createdDocuments) {
+          try {
+            await fronteggService.assignOwner(req.frontegg.user.sub, doc.id, userToken);
+            console.log(`[ADMIN] Assigned owner relation for document ${doc.id}`);
+          } catch (error) {
+            console.error(`[ADMIN] Failed to assign ReBAC relation for ${doc.id}:`, error.message);
+          }
+        }
+      }
+
+      res.json({
+        success: true,
+        documents: createdDocuments,
+        message: `Created ${createdDocuments.length} demo documents`,
+        note: 'Documents created with memorable IDs for easy demonstration'
+      });
+    } catch (error) {
+      console.error('Error seeding demo documents:', error);
+      res.status(500).json({
+        error: 'Failed to seed demo documents'
+      });
+    }
+  }
 }
 
 module.exports = DocumentController;

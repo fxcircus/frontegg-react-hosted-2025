@@ -204,12 +204,25 @@ The app features a modern sidebar navigation with the following sections:
 
 1. **Login** with your Frontegg credentials
 2. Navigate to **Documents (ReBAC)** in the sidebar
-3. **Create a document** - You'll automatically become the owner
-4. **Share documents** with other users:
-   - Click the share icon (🔗) on a document
+3. **Demo Controls**:
+   - Click **"Seed Demo Documents"** to initialize the database with 5 test documents (doc-001 through doc-005)
+   - This deletes all existing documents and creates fresh test data
+   - All seeded documents are initially owned by you
+4. **Two-Column View**:
+   - **Left Column**: Shows ALL documents in the database (bypasses permissions) with their IDs
+   - **Middle Column**: Shows only documents you have access to based on your permissions
+   - **Right Panel**: Shows details of the selected document
+5. **Share documents** with other users:
+   - Click the share icon (🔗) on a document you own
    - Enter the user's email or ID
    - Choose permission level (viewer or editor)
-5. **Test permissions** by logging in as different users
+6. **Test permissions**:
+   - Log in as different users to see how the accessible documents list changes
+   - Watch the backend console for `[ReBAC]` logs showing permission checks
+   - Use document IDs (doc-001, etc.) to create associations in Frontegg Portal
+7. **Delete All Documents** button removes all documents for a clean slate
+
+**Note**: Frontegg's ReBAC does not allow users to create new documents through the UI - only read existing ones. Use the "Seed Demo Documents" button to populate test data.
 
 ### Using the Backend SDK Demo (Pokemon Game)
 
@@ -251,6 +264,7 @@ const canRead = await e10sClient.isEntitledTo(
 
 ## API Endpoints
 
+### Document Management
 - `POST /api/documents` - Create new document
 - `GET /api/documents` - List accessible documents
 - `GET /api/documents/:id` - Get specific document
@@ -258,7 +272,15 @@ const canRead = await e10sClient.isEntitledTo(
 - `DELETE /api/documents/:id` - Delete document (requires owner)
 - `POST /api/documents/:id/share` - Share document (requires owner)
 - `DELETE /api/documents/:id/share/:userId` - Revoke access
+
+### Permission Checking
 - `POST /api/permissions/check` - Check specific permission
+- `POST /api/permissions/check-all` - Check permissions for all documents
+
+### Admin/Demo Endpoints (bypass permissions)
+- `GET /api/documents/admin/all` - List ALL documents in database
+- `DELETE /api/documents/admin/all` - Delete all documents
+- `POST /api/documents/admin/seed` - Seed demo documents with predictable IDs
 
 ### Pokemon Backend SDK Demo Endpoints
 

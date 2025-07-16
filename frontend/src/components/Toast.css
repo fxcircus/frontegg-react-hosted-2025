@@ -33,19 +33,23 @@
 }
 
 .toast-success {
-  background-color: #2e7d32;
+  background-color: #1b5e20;
+  border: 1px solid #2e7d32;
 }
 
 .toast-error {
-  background-color: #d32f2f;
+  background-color: #b71c1c;
+  border: 1px solid #d32f2f;
 }
 
 .toast-info {
-  background-color: #0288d1;
+  background-color: #01579b;
+  border: 1px solid #0288d1;
 }
 
 .toast-warning {
-  background-color: #f57c00;
+  background-color: #e65100;
+  border: 1px solid #f57c00;
 }
 
 @keyframes toast-slide-in {

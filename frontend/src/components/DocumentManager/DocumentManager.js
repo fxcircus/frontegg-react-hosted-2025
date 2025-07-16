@@ -10,19 +10,18 @@ import './DocumentManager.css';
 const DocumentManager = () => {
   const { user } = useAuth();
   const [documents, setDocuments] = useState([]);
+  const [allDocuments, setAllDocuments] = useState([]);
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [documentToShare, setDocumentToShare] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
-  const [isCreating, setIsCreating] = useState(false);
-  const [newDocTitle, setNewDocTitle] = useState('');
-  const [newDocContent, setNewDocContent] = useState('');
 
   // Fetch documents on component mount
   useEffect(() => {
     fetchDocuments();
+    fetchAllDocuments();
   }, [user]);
 
   const fetchDocuments = async () => {
@@ -48,39 +47,25 @@ const DocumentManager = () => {
     }
   };
 
-  const createDocument = async () => {
-    if (!newDocTitle.trim()) {
-      setToastMessage('Please enter a document title');
-      return;
-    }
-
+  const fetchAllDocuments = async () => {
     try {
-      const response = await fetch('/api/documents', {
-        method: 'POST',
+      const response = await fetch('/api/documents/admin/all', {
         headers: {
-          'Authorization': `Bearer ${user.accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title: newDocTitle,
-          content: newDocContent
-        })
+          'Authorization': `Bearer ${user.accessToken}`
+        }
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create document');
+        throw new Error('Failed to fetch all documents');
       }
 
       const data = await response.json();
-      setDocuments([...documents, data.document]);
-      setToastMessage('Document created successfully');
-      setIsCreating(false);
-      setNewDocTitle('');
-      setNewDocContent('');
+      setAllDocuments(data.documents);
     } catch (err) {
-      setToastMessage('Failed to create document');
+      console.error('Failed to fetch all documents:', err);
     }
   };
+
 
   const updateDocument = async (documentId, updates) => {
     try {
@@ -125,6 +110,7 @@ const DocumentManager = () => {
       }
 
       setDocuments(documents.filter(doc => doc.id !== documentId));
+      setAllDocuments(allDocuments.filter(doc => doc.id !== documentId));
       setSelectedDocument(null);
       setToastMessage('Document deleted successfully');
     } catch (err) {
@@ -180,6 +166,57 @@ const DocumentManager = () => {
     }
   };
 
+  const seedDemoDocuments = async () => {
+    try {
+      const response = await fetch('/api/documents/admin/seed', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to seed documents');
+      }
+
+      const data = await response.json();
+      setToastMessage(data.message);
+      
+      // Refresh both lists
+      await fetchDocuments();
+      await fetchAllDocuments();
+    } catch (err) {
+      setToastMessage('Failed to seed demo documents');
+    }
+  };
+
+  const deleteAllDocuments = async () => {
+    if (!window.confirm('Are you sure you want to delete ALL documents? This cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/documents/admin/all', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete documents');
+      }
+
+      const data = await response.json();
+      setToastMessage(data.message);
+      setDocuments([]);
+      setAllDocuments([]);
+      setSelectedDocument(null);
+    } catch (err) {
+      setToastMessage('Failed to delete all documents');
+    }
+  };
+
   if (isLoading) {
     return <LoadingSpinner message="Loading documents..." />;
   }
@@ -188,63 +225,70 @@ const DocumentManager = () => {
     <div className="document-manager">
       <div className="document-manager-header">
         <h2>Document Management</h2>
-        <p>Create, share, and manage documents with ReBAC permissions</p>
+        <p>Demonstrate ReBAC permissions with document sharing</p>
       </div>
 
-      <div className="document-actions">
-        {!isCreating ? (
+      <div className="demo-controls">
+        <h3>Demo Controls</h3>
+        <div className="demo-actions">
           <button 
             className="btn-primary"
-            onClick={() => setIsCreating(true)}
+            onClick={seedDemoDocuments}
           >
-            Create New Document
+            Seed Demo Documents
           </button>
-        ) : (
-          <div className="create-document-form">
-            <input
-              type="text"
-              placeholder="Document title"
-              value={newDocTitle}
-              onChange={(e) => setNewDocTitle(e.target.value)}
-              className="doc-input"
-            />
-            <textarea
-              placeholder="Document content (optional)"
-              value={newDocContent}
-              onChange={(e) => setNewDocContent(e.target.value)}
-              className="doc-textarea"
-              rows="3"
-            />
-            <div className="form-actions">
-              <button 
-                className="btn-primary"
-                onClick={createDocument}
-              >
-                Create
-              </button>
-              <button 
-                className="btn-secondary"
-                onClick={() => {
-                  setIsCreating(false);
-                  setNewDocTitle('');
-                  setNewDocContent('');
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+          <button 
+            className="btn-danger"
+            onClick={deleteAllDocuments}
+          >
+            Delete All Documents
+          </button>
+        </div>
+        <p className="demo-info">
+          The "Seed Demo Documents" button re-initializes the database with 5 test documents (doc-001 through doc-005) for demonstration purposes.
+        </p>
+        <p className="demo-info">
+          Learn more about ReBAC in the <a href="https://developers.frontegg.com/guides/authorization/rebac#relationship-based-access-control-in-frontegg" target="_blank" rel="noopener noreferrer">Frontegg Documentation</a>.
+        </p>
       </div>
 
-      <div className="document-container">
-        <div className="document-list-section">
-          <DocumentList
-            documents={documents}
-            selectedDocument={selectedDocument}
-            onSelectDocument={setSelectedDocument}
-            currentUserId={user.sub}
-          />
+      <div className="document-comparison">
+        <div className="document-column">
+          <h3>All Documents in Database</h3>
+          <p className="column-description">Complete list of documents (bypasses permissions)</p>
+          {allDocuments.length === 0 ? (
+            <div className="empty-state">
+              <p>No documents in database</p>
+              <button onClick={seedDemoDocuments}>Seed Demo Documents</button>
+            </div>
+          ) : (
+            <div className="document-list all-documents">
+              {allDocuments.map(doc => (
+                <div key={doc.id} className="document-item">
+                  <div className="doc-id">ID: {doc.id}</div>
+                  <div className="doc-title">{doc.title}</div>
+                  <div className="doc-owner">Owner: {doc.ownerId === user.sub ? 'You' : doc.ownerId}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="document-column">
+          <h3>Documents You Have Access To</h3>
+          <p className="column-description">Documents visible based on your permissions</p>
+          {documents.length === 0 ? (
+            <div className="empty-state">
+              <p>You don't have access to any documents</p>
+            </div>
+          ) : (
+            <DocumentList
+              documents={documents}
+              selectedDocument={selectedDocument}
+              onSelectDocument={setSelectedDocument}
+              currentUserId={user.sub}
+            />
+          )}
         </div>
 
         <div className="document-detail-section">
@@ -262,7 +306,7 @@ const DocumentManager = () => {
             />
           ) : (
             <div className="no-document-selected">
-              <p>Select a document to view details</p>
+              <p>Select a document from your accessible list to view details</p>
             </div>
           )}
         </div>

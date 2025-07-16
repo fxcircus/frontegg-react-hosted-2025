@@ -54,7 +54,7 @@ class FronteggService {
     } catch (error) {
       // Extract trace ID from HTML if present
       let extractedTraceId = null;
-      if (typeof error.response?.data === 'string' && error.response.data.includes('Trace ID:')) {
+      if (typeof error.response?.data === 'string' && error.response.data.includes('frontegg-trace-id:')) {
         const match = error.response.data.match(/Trace ID:\s*([a-f0-9]+)/i);
         if (match) {
           extractedTraceId = match[1];

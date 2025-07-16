@@ -35,6 +35,7 @@ const DocumentList = ({ documents, selectedDocument, onSelectDocument, currentUs
             >
               <span className="doc-icon">{getDocumentIcon(doc)}</span>
               <div className="doc-info">
+                <span className="doc-id">ID: {doc.id}</span>
                 <span className="doc-title">{doc.title}</span>
                 <span className="doc-date">{formatDate(doc.createdAt)}</span>
               </div>
