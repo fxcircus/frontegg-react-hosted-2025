@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@frontegg/react';
 import './Pokemon.css';
+import '../DocsLink.css';
 import Card from '../Card';
 import Button from '../Button';
 import LoadingSpinner from '../LoadingSpinner';
@@ -225,7 +226,16 @@ const Pokemon = () => {
   return (
     <div className="pokemon-page">
       <div className="page-header">
-        <h1>Backend SDK Demo</h1>
+        <div className="page-title-wrapper">
+          <h1>Backend SDK Demo</h1>
+          <a href="https://developers.frontegg.com/guides/integrations/protect-backend-api/validate-jwt" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             className="docs-link"
+             title="Learn more about protecting backend APIs">
+            <span className="tooltip-icon">?</span>
+          </a>
+        </div>
         <p className="subtitle">Protecting Backend APIs with Frontegg Permissions</p>
         <div className="demo-explanation">
           <div className="info-box">

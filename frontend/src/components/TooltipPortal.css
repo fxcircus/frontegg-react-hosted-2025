@@ -1,0 +1,48 @@
+/* Global tooltip styles for portal-rendered tooltips */
+.tooltip-portal-content {
+  position: fixed;
+  background: #000000 !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  font-size: 0.813rem !important;
+  line-height: 1.5 !important;
+  max-width: 320px !important;
+  z-index: 99999 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
+}
+
+.tooltip-portal-content * {
+  color: #ffffff !important;
+}
+
+.tooltip-portal-content a {
+  color: #4dabf7 !important;
+  text-decoration: underline !important;
+}
+
+.tooltip-portal-content a:hover {
+  color: #74c0fc !important;
+}
+
+/* Arrow styles */
+.tooltip-portal-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+}
+
+.tooltip-arrow-left .tooltip-portal-arrow {
+  left: -12px;
+  top: 10px;
+  border-right-color: #000000;
+}
+
+.tooltip-arrow-right .tooltip-portal-arrow {
+  right: -12px;
+  top: 10px;
+  border-left-color: #000000;
+}

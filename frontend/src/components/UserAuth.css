@@ -210,7 +210,6 @@
   opacity: 0;
   visibility: hidden;
   transition: var(--transition);
-  pointer-events: none;
   z-index: 1000;
 }
 
@@ -223,9 +222,20 @@
   border-top-color: rgba(0, 0, 0, 0.9);
 }
 
-.mfa-tooltip:hover .tooltip-content {
+.mfa-tooltip:hover .tooltip-content,
+.tooltip-content:hover {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
+}
+
+.tooltip-content a {
+  color: #4dabf7;
+  text-decoration: underline;
+}
+
+.tooltip-content a:hover {
+  color: #74c0fc;
 }
 
 /* Auth Grid */
@@ -432,7 +442,7 @@
   text-align: center;
 }
 
-.stat-value {
+.entitlements-stats .stat-value {
   display: block;
   font-size: 2.5rem;
   font-weight: 800;
@@ -441,9 +451,9 @@
   margin-bottom: 4px;
 }
 
-.stat-label {
+.entitlements-stats .stat-label {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: white;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;

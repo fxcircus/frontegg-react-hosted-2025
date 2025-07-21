@@ -24,7 +24,7 @@ const EntitlementsInfo = () => {
   // Replace with the correct keys from your app
   // See https://developers.frontegg.com/sdks/frontend/react/entitlements for details.
   const featureKey = "test"; // Feature entitlement key
-  const permissionKey = "fe.secure.read.securityPolicy"; // Permission entitlement key
+  const permissionKey = "myPermission"; // Permission entitlement key
   // ------------------------------------------------------------
 
   console.log('Before hooks');
@@ -56,7 +56,12 @@ const EntitlementsInfo = () => {
 
   return (
     <ErrorBoundary>
-      <Card title="Plans and Features" subtitle="View your account's entitlements and permissions.">
+      <Card 
+        title="Plans and Features" 
+        subtitle="View your account's entitlements and permissions."
+        tooltipContent="Entitlements allow you to control feature access and permissions based on subscription plans. Features can be toggled on/off per tenant, while permissions define what actions users can perform."
+        tooltipLink="https://developers.frontegg.com/guides/authorization/entitlements/intro"
+      >
         <div className="entitlements-section">
           {isFEntitled && (
             <div className="entitlement-item">
@@ -81,18 +86,6 @@ const EntitlementsInfo = () => {
           {!hasEntitlement && (
             <div className="entitlement-item">No plans / features</div>
           )}
-        </div>
-        <div className="entitlements-doc">
-          <p>
-            Learn more about plans and features in the&nbsp;
-            <a
-              href="https://developers.frontegg.com/guides/authorization/entitlements/intro"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Frontegg Documentation
-            </a>.
-          </p>
         </div>
       </Card>
     </ErrorBoundary>

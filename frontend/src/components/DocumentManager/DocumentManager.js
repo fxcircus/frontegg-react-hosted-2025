@@ -6,6 +6,7 @@ import ShareDialog from './ShareDialog';
 import LoadingSpinner from '../LoadingSpinner';
 import Toast from '../Toast';
 import './DocumentManager.css';
+import '../DocsLink.css';
 
 const DocumentManager = () => {
   const { user } = useAuth();
@@ -224,7 +225,16 @@ const DocumentManager = () => {
   return (
     <div className="document-manager">
       <div className="document-manager-header">
-        <h2>Document Management</h2>
+        <div className="page-title-wrapper">
+          <h2>ReBAC Document Database</h2>
+          <a href="https://developers.frontegg.com/guides/authorization/rebac#relationship-based-access-control-in-frontegg" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             className="docs-link"
+             title="Learn more about ReBAC">
+            <span className="tooltip-icon">?</span>
+          </a>
+        </div>
         <p>Demonstrate ReBAC permissions with document sharing</p>
       </div>
 
@@ -246,9 +256,6 @@ const DocumentManager = () => {
         </div>
         <p className="demo-info">
           The "Seed Demo Documents" button re-initializes the database with 5 test documents (doc-001 through doc-005) for demonstration purposes.
-        </p>
-        <p className="demo-info">
-          Learn more about ReBAC in the <a href="https://developers.frontegg.com/guides/authorization/rebac#relationship-based-access-control-in-frontegg" target="_blank" rel="noopener noreferrer">Frontegg Documentation</a>.
         </p>
       </div>
 

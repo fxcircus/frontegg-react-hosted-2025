@@ -8,15 +8,17 @@
 
 .document-manager-header {
   margin-bottom: 30px;
+}
+
+.page-title-wrapper {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
 .document-manager-header h2 {
-  margin: 0 0 8px 0;
+  margin: 0;
   color: var(--gray-900);
   font-size: 2rem;
 }
@@ -24,6 +26,78 @@
 .document-manager-header p {
   color: var(--gray-600);
   margin: 0;
+}
+
+/* Page Tooltip */
+.page-tooltip {
+  position: relative;
+  display: inline-flex;
+}
+
+.page-tooltip .tooltip-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--gray-200);
+  color: var(--gray-600);
+  font-size: 0.875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  transition: var(--transition);
+}
+
+.page-tooltip .tooltip-icon:hover {
+  background: var(--gray-300);
+  color: var(--gray-700);
+}
+
+.page-tooltip .tooltip-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 340px;
+  padding: 14px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+  z-index: 1000;
+  text-align: left;
+}
+
+.page-tooltip .tooltip-content::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.9);
+}
+
+.page-tooltip:hover .tooltip-content,
+.page-tooltip .tooltip-content:hover {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.page-tooltip .tooltip-content a {
+  color: #4dabf7;
+  text-decoration: underline;
+}
+
+.page-tooltip .tooltip-content a:hover {
+  color: #74c0fc;
 }
 
 /* Demo Controls */
@@ -67,21 +141,22 @@
 }
 
 .btn-danger {
-  background: var(--red-500);
+  background: var(--gradient-primary);
   color: white;
   padding: 10px 20px;
   border-radius: 6px;
   font-size: 14px;
+  border: 2px solid #dc3545;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  border: none;
 }
 
 .btn-danger:hover {
-  background: var(--red-600);
+  background: var(--gradient-primary);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
+  border-color: #ff0000;
 }
 
 /* Document Comparison Layout */

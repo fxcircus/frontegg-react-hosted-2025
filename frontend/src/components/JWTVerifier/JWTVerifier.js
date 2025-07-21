@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@frontegg/react';
 import './JWTVerifier.css';
+import '../DocsLink.css';
 import Card from '../Card';
 import Button from '../Button';
 
@@ -64,7 +65,16 @@ const JWTVerifier = () => {
   return (
     <div className="jwt-verifier-page">
       <div className="page-header">
-        <h1>JWT Token Verifier</h1>
+        <div className="page-title-wrapper">
+          <h1>JWT Token Verifier</h1>
+          <a href="https://developers.frontegg.com/guides/integrations/protect-backend-api/validate-jwt#validate-jwt-token-without-frontegg-middleware" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             className="docs-link"
+             title="Learn how to validate JWT tokens without Frontegg middleware">
+            <span className="tooltip-icon">?</span>
+          </a>
+        </div>
         <p>Validate and inspect JWT tokens with comprehensive checks</p>
       </div>
 

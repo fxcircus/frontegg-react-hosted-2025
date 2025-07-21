@@ -174,6 +174,8 @@ const TenantHierarchySwitcher = ({
       title={title}
       subtitle="Navigate through your tenant hierarchy and switch between tenants"
       className={`tenant-hierarchy-card ${className || ''}`}
+      tooltipContent="Tenant hierarchies allow you to create parent-child relationships between accounts, enabling centralized management and permission inheritance."
+      tooltipLink="https://developers.frontegg.com/guides/management/manage-accounts/hierarchies"
     >
       <div className="hierarchy-container">
         {isHierarchyLoading ? (

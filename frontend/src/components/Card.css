@@ -5,7 +5,7 @@
   box-shadow: var(--shadow-md);
   border: 1px solid rgba(255, 255, 255, 0.8);
   margin-bottom: 24px;
-  overflow: hidden;
+  overflow: visible;
   transition: var(--transition);
   position: relative;
 }
@@ -35,6 +35,14 @@
   padding: 24px 28px 20px;
   border-bottom: 1px solid var(--gray-200);
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), transparent);
+  position: relative;
+  overflow: visible;
+}
+
+.card-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .card-title {
@@ -43,6 +51,131 @@
   font-weight: 700;
   color: var(--gray-900);
   letter-spacing: -0.5px;
+}
+
+/* Card Tooltip */
+.card-tooltip {
+  position: relative;
+  display: inline-flex;
+}
+
+.card-tooltip .tooltip-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gray-200);
+  color: var(--gray-600);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  transition: var(--transition);
+}
+
+.card-tooltip .tooltip-icon:hover {
+  background: var(--gray-300);
+  color: var(--gray-700);
+}
+
+.card-tooltip .tooltip-content {
+  position: absolute;
+  top: -5px;
+  left: calc(100% + 10px);
+  width: 280px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-size: 0.813rem;
+  line-height: 1.5;
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.card-tooltip .tooltip-content::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 100%;
+  border: 6px solid transparent;
+  border-right-color: rgba(0, 0, 0, 0.9);
+}
+
+.card-tooltip:hover .tooltip-content,
+.card-tooltip .tooltip-content:hover {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Fixed positioning for tooltip */
+.tooltip-fixed {
+  position: fixed !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  /* Add missing visual styles for portal-rendered tooltip */
+  background: rgba(0, 0, 0, 0.9) !important;
+  color: white !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-lg) !important;
+  font-size: 0.813rem !important;
+  line-height: 1.5 !important;
+  max-width: 320px !important;
+  width: max-content !important;
+  z-index: 9999 !important;
+}
+
+.card-tooltip .tooltip-content a {
+  color: #4dabf7;
+  text-decoration: underline;
+}
+
+.card-tooltip .tooltip-content a:hover {
+  color: #74c0fc;
+}
+
+/* Tooltip arrow styles for portal-rendered tooltips */
+.tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+}
+
+.tooltip-arrow-left .tooltip-arrow {
+  left: -12px;
+  top: 10px;
+  border-right-color: rgba(0, 0, 0, 0.9);
+}
+
+.tooltip-arrow-right .tooltip-arrow {
+  right: -12px;
+  top: 10px;
+  border-left-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Responsive tooltip positioning */
+@media (max-width: 1200px) {
+  .card-tooltip .tooltip-content {
+    left: auto;
+    right: calc(100% + 10px);
+    top: -5px;
+  }
+  
+  .card-tooltip .tooltip-content::after {
+    left: 100%;
+    right: auto;
+    border-right-color: transparent;
+    border-left-color: rgba(0, 0, 0, 0.9);
+  }
 }
 
 .card-subtitle {
@@ -55,6 +188,8 @@
 
 .card-content {
   padding: 24px;
+  overflow: visible;
+  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
 }
 
 /* Responsive adjustments */

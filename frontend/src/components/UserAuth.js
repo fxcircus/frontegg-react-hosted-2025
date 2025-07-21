@@ -111,7 +111,11 @@ const UserAuth = () => {
                 <div className="mfa-tooltip">
                   <span className="tooltip-icon">?</span>
                   <div className="tooltip-content">
-                    Multi-Factor Authentication adds an extra layer of security by requiring additional verification before accessing sensitive areas
+                    Multi-Factor Authentication adds an extra layer of security by requiring additional verification before accessing sensitive areas.
+                    <br /><br />
+                    <a href="https://developers.frontegg.com/guides/step-up/intro" target="_blank" rel="noopener noreferrer" style={{color: '#4dabf7', textDecoration: 'underline'}}>
+                      Learn more about Step-up Authentication
+                    </a>
                   </div>
                 </div>
               </div>

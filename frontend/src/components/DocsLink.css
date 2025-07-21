@@ -1,0 +1,29 @@
+/* Documentation link styles */
+.docs-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.docs-link:hover .tooltip-icon {
+  background: var(--gray-300);
+  color: var(--gray-700);
+  transform: scale(1.1);
+}
+
+.docs-link .tooltip-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--gray-200);
+  color: var(--gray-600);
+  font-size: 0.875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  transition: all 0.3s ease;
+}

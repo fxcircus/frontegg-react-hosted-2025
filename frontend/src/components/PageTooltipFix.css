@@ -1,0 +1,32 @@
+/* Global fix for all page tooltips to ensure proper rendering */
+.page-tooltip .tooltip-content {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  z-index: 99999 !important;
+}
+
+.page-tooltip .tooltip-content * {
+  color: #ffffff !important;
+}
+
+.page-tooltip .tooltip-content a {
+  color: #4dabf7 !important;
+  text-decoration: underline !important;
+}
+
+.page-tooltip .tooltip-content a:hover {
+  color: #74c0fc !important;
+}
+
+/* Fix arrow colors */
+.page-tooltip .tooltip-content::after {
+  border-bottom-color: #000000 !important;
+}
+
+/* Ensure tooltip is fully visible when hovered */
+.page-tooltip:hover .tooltip-content {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
