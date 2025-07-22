@@ -44,7 +44,7 @@ const UserAuth = () => {
 
   // Entitlements - hooks must be called unconditionally
   const featureKey = "test";
-  const permissionKey = "fe.secure.read.securityPolicy";
+  const permissionKey = "myPermission";
   const featureEntitlements = useFeatureEntitlements(featureKey) || { isEntitled: false };
   const permissionEntitlements = usePermissionEntitlements(permissionKey) || { isEntitled: false };
 
