@@ -20,11 +20,14 @@ npm start
 
 The `npm start` command will automatically:
 - ✅ Check prerequisites (Node.js, Docker, environment files)
+- ✅ Verify ports 3000 and 5000 are available before starting
 - ✅ Start Docker containers (Entitlements Agent for ReBAC) 
 - ✅ Wait for services to be healthy
 - ✅ Launch the backend API server on http://localhost:5000
 - ✅ Launch the React frontend on http://localhost:3000
 - ✅ Handle graceful shutdown on exit
+
+**Port Conflict Detection**: The startup script now detects if ports are already in use and provides helpful error messages with instructions on how to resolve conflicts.
 
 ## Features
 
@@ -374,9 +377,12 @@ npm start              # Start production server
    - **Alternative**: Delete `node_modules` and `package-lock.json`, then reinstall
 
 2. **Error**: Port already in use
-   - **Solution**: Change ports in `.env` files or kill existing processes
-   - **Frontend**: Change port with `PORT=3001 npm start`
-   - **Backend**: Update `PORT` in `backend/.env`
+   - **Automatic Detection**: The startup script now detects port conflicts and shows which process is using the port
+   - **Solutions**:
+     - Kill the process: `lsof -ti:5000 | xargs kill -9` (for port 5000)
+     - Use a different port: `PORT=5001 npm start`
+     - Frontend port: Change with `PORT=3001 npm start`
+   - **Note**: The backend server also provides clear error messages if started separately
 
 ## License
 

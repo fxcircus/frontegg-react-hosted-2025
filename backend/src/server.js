@@ -310,10 +310,31 @@ async function startServer() {
   // Initialize ReBAC client
   await initializeReBACClient(process.env.ENTITLEMENTS_AGENT_URL);
   
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
     console.log(`Entitlements Agent: ${process.env.ENTITLEMENTS_AGENT_URL || 'http://localhost:8181'}`);
+  });
+
+  // Handle server errors (like port already in use)
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`\n❌ ERROR: Port ${PORT} is already in use!\n`);
+      console.error('Another process is using this port. This could be:');
+      console.error('  - Another instance of this application');
+      console.error('  - A different application (check if you have another project running)');
+      console.error('\nTo fix this issue, you can:');
+      console.error(`  1. Kill the process using port ${PORT}:`);
+      console.error(`     - On macOS/Linux: lsof -ti:${PORT} | xargs kill -9`);
+      console.error(`     - On Windows: netstat -ano | findstr :${PORT} (then kill the PID)`);
+      console.error(`  2. Use a different port by setting the PORT environment variable:`);
+      console.error(`     - PORT=5001 npm start`);
+      console.error('\n');
+      process.exit(1);
+    } else {
+      console.error('Server error:', error);
+      process.exit(1);
+    }
   });
 }
 

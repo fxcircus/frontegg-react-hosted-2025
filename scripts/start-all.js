@@ -43,6 +43,44 @@ async function isDockerRunning() {
   });
 }
 
+// Check if a port is available
+async function isPortAvailable(port) {
+  return new Promise((resolve) => {
+    const net = require('net');
+    const server = net.createServer();
+    
+    server.once('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
+    
+    server.once('listening', () => {
+      server.close();
+      resolve(true);
+    });
+    
+    server.listen(port);
+  });
+}
+
+// Get process using a port (macOS/Linux)
+function getProcessUsingPort(port) {
+  try {
+    const result = require('child_process').execSync(
+      process.platform === 'darwin' 
+        ? `lsof -ti:${port} | head -1 | xargs ps -p | tail -1`
+        : `lsof -i:${port} | grep LISTEN | awk '{print $2}' | head -1 | xargs ps -p | tail -1`,
+      { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'ignore'] }
+    );
+    return result.trim();
+  } catch {
+    return null;
+  }
+}
+
 // Wait for a URL to be accessible
 async function waitForUrl(url, maxAttempts = 30, delay = 1000) {
   const http = require('http');
@@ -119,6 +157,41 @@ async function startAll() {
   
   if (!fs.existsSync(backendEnv)) {
     log('❌ backend/.env file not found. Please create it from backend/.env.example', colors.red);
+    process.exit(1);
+  }
+  
+  // Check if ports are available
+  const backendPort = process.env.PORT || 5000;
+  const frontendPort = 3000;
+  
+  log(`Checking port availability...`);
+  
+  const isBackendPortFree = await isPortAvailable(backendPort);
+  const isFrontendPortFree = await isPortAvailable(frontendPort);
+  
+  if (!isBackendPortFree) {
+    log(`\n❌ ERROR: Port ${backendPort} is already in use!`, colors.red);
+    const processInfo = getProcessUsingPort(backendPort);
+    if (processInfo) {
+      log(`Process using port ${backendPort}:`, colors.yellow);
+      log(`  ${processInfo}`, colors.yellow);
+    }
+    log('\nTo fix this issue, you can:', colors.yellow);
+    log(`  1. Kill the process using port ${backendPort}:`);
+    log(`     - lsof -ti:${backendPort} | xargs kill -9`);
+    log(`  2. Use a different port:`);
+    log(`     - PORT=5001 npm start`);
+    process.exit(1);
+  }
+  
+  if (!isFrontendPortFree) {
+    log(`\n❌ ERROR: Port ${frontendPort} is already in use!`, colors.red);
+    const processInfo = getProcessUsingPort(frontendPort);
+    if (processInfo) {
+      log(`Process using port ${frontendPort}:`, colors.yellow);
+      log(`  ${processInfo}`, colors.yellow);
+    }
+    log('\nAnother React app might be running. Please stop it first.', colors.yellow);
     process.exit(1);
   }
   
