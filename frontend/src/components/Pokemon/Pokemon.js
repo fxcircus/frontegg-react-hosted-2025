@@ -6,6 +6,7 @@ import Card from '../Card';
 import Button from '../Button';
 import LoadingSpinner from '../LoadingSpinner';
 import Toast from '../Toast';
+import { POKEMON_PERMISSIONS } from '../../constants/entitlements';
 
 const Pokemon = () => {
   const { user } = useAuth();
@@ -63,9 +64,9 @@ const Pokemon = () => {
     console.log('Extracted permission keys:', permissionKeys); // Debug log
     
     setPermissions({
-      canCatch: permissionKeys.includes('pokemon.catch'),
-      canView: permissionKeys.includes('pokemon.view'),
-      canTrade: permissionKeys.includes('pokemon.trade')
+      canCatch: permissionKeys.includes(POKEMON_PERMISSIONS.CATCH),
+      canView: permissionKeys.includes(POKEMON_PERMISSIONS.VIEW),
+      canTrade: permissionKeys.includes(POKEMON_PERMISSIONS.TRADE)
     });
   };
 
@@ -91,7 +92,7 @@ const Pokemon = () => {
           showToast(
             <div>
               <div>🚫 Permission Denied (403)</div>
-              <div className="error-details">Backend Response: {error.message || 'You need the "pokemon.view" permission'}</div>
+              <div className="error-details">Backend Response: {error.message || `You need the "${POKEMON_PERMISSIONS.VIEW}" permission`}</div>
               <div className="error-hint">The backend SDK validated your JWT and found missing permissions</div>
             </div>,
             'error'
@@ -145,7 +146,7 @@ const Pokemon = () => {
           showToast(
             <div>
               <div>🚫 Permission Denied (403)</div>
-              <div className="error-details">Backend Response: {data.message || 'You need the "pokemon.catch" permission'}</div>
+              <div className="error-details">Backend Response: {data.message || `You need the "${POKEMON_PERMISSIONS.CATCH}" permission`}</div>
               <div className="error-hint">This is Frontegg's SDK protecting your backend API</div>
             </div>,
             'error'
@@ -198,7 +199,7 @@ const Pokemon = () => {
           showToast(
             <div>
               <div>🚫 Permission Denied (403)</div>
-              <div className="error-details">Backend Response: {data.message || 'You need the "pokemon.trade" permission'}</div>
+              <div className="error-details">Backend Response: {data.message || `You need the "${POKEMON_PERMISSIONS.TRADE}" permission`}</div>
               <div className="error-hint">This is Frontegg's SDK protecting your backend API</div>
             </div>,
             'error'
@@ -298,7 +299,7 @@ const Pokemon = () => {
         <Card title="API: Catch Pokemon" className="action-card">
           <div className="endpoint-info">
             <code>GET /api/pokemon/catch</code>
-            <span className="permission-badge">Requires: pokemon.catch</span>
+            <span className="permission-badge">Requires: {POKEMON_PERMISSIONS.CATCH}</span>
           </div>
           <p>This endpoint demonstrates permission-protected API access.</p>
           <Button
@@ -311,7 +312,7 @@ const Pokemon = () => {
           {!permissions.canCatch && (
             <div className="permission-denied-info">
               <p className="permission-hint">⚠️ Missing Permission</p>
-              <p className="permission-explanation">Your JWT token doesn't include the "pokemon.catch" permission.</p>
+              <p className="permission-explanation">Your JWT token doesn't include the "{POKEMON_PERMISSIONS.CATCH}" permission.</p>
               <p className="permission-fix">Click "Try API Call" to see the actual backend error response.</p>
             </div>
           )}
@@ -320,7 +321,7 @@ const Pokemon = () => {
         <Card title="API: Trade Pokemon" className="action-card">
           <div className="endpoint-info">
             <code>POST /api/pokemon/trade/:userId</code>
-            <span className="permission-badge">Requires: pokemon.trade</span>
+            <span className="permission-badge">Requires: {POKEMON_PERMISSIONS.TRADE}</span>
           </div>
           <p>This endpoint shows user-to-user interactions with permission checks.</p>
           <div className="trade-form">
@@ -341,7 +342,7 @@ const Pokemon = () => {
           {!permissions.canTrade && (
             <div className="permission-denied-info">
               <p className="permission-hint">⚠️ Missing Permission</p>
-              <p className="permission-explanation">Your JWT token doesn't include the "pokemon.trade" permission.</p>
+              <p className="permission-explanation">Your JWT token doesn't include the "{POKEMON_PERMISSIONS.TRADE}" permission.</p>
               <p className="permission-fix">Click "Try API Call" to see the actual backend error response.</p>
             </div>
           )}
@@ -353,15 +354,15 @@ const Pokemon = () => {
         <div className="permissions-grid">
           <div className={`permission-status ${permissions.canCatch ? 'granted' : 'denied'}`}>
             <span className="status-icon">{permissions.canCatch ? '✅' : '❌'}</span>
-            <span className="permission-name">pokemon.catch</span>
+            <span className="permission-name">{POKEMON_PERMISSIONS.CATCH}</span>
           </div>
           <div className={`permission-status ${permissions.canView ? 'granted' : 'denied'}`}>
             <span className="status-icon">{permissions.canView ? '✅' : '❌'}</span>
-            <span className="permission-name">pokemon.view</span>
+            <span className="permission-name">{POKEMON_PERMISSIONS.VIEW}</span>
           </div>
           <div className={`permission-status ${permissions.canTrade ? 'granted' : 'denied'}`}>
             <span className="status-icon">{permissions.canTrade ? '✅' : '❌'}</span>
-            <span className="permission-name">pokemon.trade</span>
+            <span className="permission-name">{POKEMON_PERMISSIONS.TRADE}</span>
           </div>
         </div>
         <p className="permissions-note">These permissions are extracted from your JWT token and checked by the backend on each API call.</p>
@@ -371,7 +372,7 @@ const Pokemon = () => {
       <Card title="API Response: My Collection" className="collection-card">
         <div className="endpoint-info">
           <code>GET /api/pokemon/my-collection</code>
-          <span className="permission-badge">Requires: pokemon.view</span>
+          <span className="permission-badge">Requires: {POKEMON_PERMISSIONS.VIEW}</span>
         </div>
         {loading ? (
           <LoadingSpinner />
@@ -379,7 +380,7 @@ const Pokemon = () => {
           <div className="empty-collection">
             {!permissions.canView ? (
               <>
-                <p>⚠️ Missing "pokemon.view" permission</p>
+                <p>⚠️ Missing "{POKEMON_PERMISSIONS.VIEW}" permission</p>
                 <p style={{fontSize: '0.9rem', color: '#888'}}>The backend API denied access. This collection would show your Pokemon if you had permission.</p>
               </>
             ) : (

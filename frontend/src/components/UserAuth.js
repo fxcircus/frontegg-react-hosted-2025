@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import Card from './Card';
 import Toast from './Toast';
 import './UserAuth.css';
+import { FEATURE_KEYS, PERMISSION_KEYS } from '../constants/entitlements';
 
 const UserAuth = () => {
   const { user } = useAuth();
@@ -43,8 +44,8 @@ const UserAuth = () => {
   const decodedToken = user?.accessToken ? jwtDecode(user.accessToken) : null;
 
   // Entitlements - hooks must be called unconditionally
-  const featureKey = "test";
-  const permissionKey = "myPermission";
+  const featureKey = FEATURE_KEYS.TEST;
+  const permissionKey = PERMISSION_KEYS.MY_PERMISSION;
   const featureEntitlements = useFeatureEntitlements(featureKey) || { isEntitled: false };
   const permissionEntitlements = usePermissionEntitlements(permissionKey) || { isEntitled: false };
 

@@ -65,6 +65,37 @@ Complete the initial onboarding form and note down your Client ID and API Key fr
 
    **Note:** The backend URL defaults to `http://localhost:5000` and doesn't need to be configured unless you're running the backend on a different port.
 
+## Configuring Permissions and Features
+
+The application uses centralized configuration for all Frontegg entitlement keys. To customize permissions and features:
+
+1. Edit `frontend/src/constants/entitlements.js`:
+
+   ```javascript
+   // Feature entitlement keys
+   export const FEATURE_KEYS = {
+     TEST: 'test'  // Change this to your feature key
+   };
+
+   // Permission entitlement keys
+   export const PERMISSION_KEYS = {
+     MY_PERMISSION: 'myPermission'  // Change this to your permission key
+   };
+
+   // Pokemon-specific permissions
+   export const POKEMON_PERMISSIONS = {
+     CATCH: 'pokemon.catch',
+     VIEW: 'pokemon.view',
+     TRADE: 'pokemon.trade'
+   };
+   ```
+
+2. Ensure these keys match your Frontegg workspace configuration.
+
+3. All components will automatically use the updated values - no need to modify multiple files.
+
+📚 **Learn more**: [Frontegg Entitlements Documentation](https://developers.frontegg.com/guides/authorization/entitlements/intro)
+
 ## Running the Application
 
 **Note:** This frontend requires the backend server to be running for full functionality. See the main [README.md](../README.md) for instructions on running the complete application with `npm start` from the root directory.

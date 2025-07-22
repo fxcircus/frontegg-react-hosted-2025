@@ -4,6 +4,7 @@ import Card from './Card';
 import "../App.css";
 import "../index.css";
 import ErrorBoundary from './ErrorBoundary';
+import { FEATURE_KEYS, PERMISSION_KEYS } from '../constants/entitlements';
 
 // Default entitlements object when none are provided.
 const fallbackEntitlements = { isEntitled: false, list: [] };
@@ -21,10 +22,10 @@ const useSafeEntitlement = (hook, ...args) => {
 
 const EntitlementsInfo = () => {
   // ------------------------------------------------------------
-  // Replace with the correct keys from your app
+  // Using centralized entitlement keys from constants/entitlements.js
   // See https://developers.frontegg.com/sdks/frontend/react/entitlements for details.
-  const featureKey = "test"; // Feature entitlement key
-  const permissionKey = "myPermission"; // Permission entitlement key
+  const featureKey = FEATURE_KEYS.TEST; // Feature entitlement key
+  const permissionKey = PERMISSION_KEYS.MY_PERMISSION; // Permission entitlement key
   // ------------------------------------------------------------
 
   console.log('Before hooks');
