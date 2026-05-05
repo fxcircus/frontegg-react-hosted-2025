@@ -9,7 +9,7 @@ const Navbar = () => {
   const isSteppedUp = useIsSteppedUp({ maxAge: MAX_AGE });
 
   const showAdminPortal = () => {
-    AdminPortal.show();
+    AdminPortal.showMultiApp();
   };
 
   const logout = () => {

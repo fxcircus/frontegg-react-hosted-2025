@@ -5,7 +5,7 @@
   transform: translateX(-50%);
   background: #1a1d29;
   backdrop-filter: none;
-  color: rgb(0, 0, 0);
+  color: #f5f7fa;
   padding: 16px 24px;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -30,27 +30,40 @@
   font-size: 0.9375rem;
   font-weight: 500;
   line-height: 1.4;
+  color: #f5f7fa;
 }
 
 .toast-success {
   background-color: #1a1d29;
   border: 1px solid #2e7d32;
+  color: #f5f7fa;
 }
+.toast-success .toast-message,
+.toast-success .toast-icon { color: #81c784; }
 
 .toast-error {
   background-color: #1a1d29;
   border: 1px solid #d32f2f;
+  color: #f5f7fa;
 }
+.toast-error .toast-message,
+.toast-error .toast-icon { color: #ef9a9a; }
 
 .toast-info {
   background-color: #1a1d29;
   border: 1px solid #0288d1;
+  color: #f5f7fa;
 }
+.toast-info .toast-message,
+.toast-info .toast-icon { color: #4fc3f7; }
 
 .toast-warning {
   background-color: #1a1d29;
   border: 1px solid #f57c00;
+  color: #f5f7fa;
 }
+.toast-warning .toast-message,
+.toast-warning .toast-icon { color: #ffb74d; }
 
 @keyframes toast-slide-in {
   from {

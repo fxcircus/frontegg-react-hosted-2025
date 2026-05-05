@@ -18,7 +18,7 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileClose }
   ];
 
   const showAdminPortal = () => {
-    AdminPortal.show();
+    AdminPortal.showMultiApp();
   };
 
   const logout = () => {

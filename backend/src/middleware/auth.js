@@ -29,12 +29,18 @@ const authenticate = (req, res, next) => {
     return res.status(401).json({ error: 'No token provided' });
   }
 
-  // Verify JWT
-  jwt.verify(token, getKey, {
+  // Verify JWT — Frontegg user tokens carry the app ID in `aud`, not the client ID.
+  // If FRONTEGG_APP_ID is set we enforce it; otherwise we skip audience verification
+  // (issuer + signature still validated).
+  const verifyOptions = {
     algorithms: ['RS256'],
-    issuer: process.env.FRONTEGG_BASE_URL,
-    audience: process.env.FRONTEGG_CLIENT_ID // Add audience verification
-  }, (err, decoded) => {
+    issuer: process.env.FRONTEGG_BASE_URL
+  };
+  if (process.env.FRONTEGG_APP_ID) {
+    verifyOptions.audience = process.env.FRONTEGG_APP_ID;
+  }
+
+  jwt.verify(token, getKey, verifyOptions, (err, decoded) => {
     if (err) {
       let errorMessage = 'Invalid token';
       if (err.name === 'TokenExpiredError') {
@@ -91,13 +97,16 @@ const verifyToken = async (req, res) => {
     }
     
     // Verify with all checks
+    const verifyOpts = {
+      algorithms: ['RS256'],
+      issuer: process.env.FRONTEGG_BASE_URL,
+      complete: true
+    };
+    if (process.env.FRONTEGG_APP_ID) {
+      verifyOpts.audience = process.env.FRONTEGG_APP_ID;
+    }
     const decoded = await new Promise((resolve, reject) => {
-      jwt.verify(token, getKey, {
-        algorithms: ['RS256'],
-        issuer: process.env.FRONTEGG_BASE_URL,
-        audience: process.env.FRONTEGG_CLIENT_ID,
-        complete: true
-      }, (err, decoded) => {
+      jwt.verify(token, getKey, verifyOpts, (err, decoded) => {
         if (err) reject(err);
         else resolve(decoded);
       });
@@ -140,7 +149,7 @@ const verifyToken = async (req, res) => {
     } else if (err.name === 'JsonWebTokenError') {
       if (err.message.includes('audience')) {
         validation.validation.audience = 'invalid';
-        validation.errors.push(`Invalid audience. Expected: ${process.env.FRONTEGG_CLIENT_ID}`);
+        validation.errors.push(`Invalid audience. Expected: ${process.env.FRONTEGG_APP_ID}`);
       } else if (err.message.includes('issuer')) {
         validation.validation.issuer = 'invalid';
         validation.errors.push(`Invalid issuer. Expected: ${process.env.FRONTEGG_BASE_URL}`);

@@ -161,8 +161,8 @@ async function startAll() {
   }
   
   // Check if ports are available
-  const backendPort = process.env.PORT || 5000;
-  const frontendPort = 3000;
+  const backendPort = process.env.BACKEND_PORT || 5000;
+  const frontendPort = parseInt(process.env.FRONTEND_PORT || '4500', 10);
   
   log(`Checking port availability...`);
   
@@ -170,7 +170,7 @@ async function startAll() {
   const isFrontendPortFree = await isPortAvailable(frontendPort);
   
   if (!isBackendPortFree) {
-    log(`\n❌ ERROR: Port ${backendPort} is already in use!`, colors.red);
+    log(`\n❌ ERROR: Port ${backendPort} (backend) is already in use!`, colors.red);
     const processInfo = getProcessUsingPort(backendPort);
     if (processInfo) {
       log(`Process using port ${backendPort}:`, colors.yellow);
@@ -179,8 +179,8 @@ async function startAll() {
     log('\nTo fix this issue, you can:', colors.yellow);
     log(`  1. Kill the process using port ${backendPort}:`);
     log(`     - lsof -ti:${backendPort} | xargs kill -9`);
-    log(`  2. Use a different port:`);
-    log(`     - PORT=5001 npm start`);
+    log(`  2. Use a different backend port:`);
+    log(`     - BACKEND_PORT=5001 npm start`);
     process.exit(1);
   }
   
@@ -191,7 +191,11 @@ async function startAll() {
       log(`Process using port ${frontendPort}:`, colors.yellow);
       log(`  ${processInfo}`, colors.yellow);
     }
-    log('\nAnother React app might be running. Please stop it first.', colors.yellow);
+    log('\nTo fix this issue, you can:', colors.yellow);
+    log(`  1. Kill the process using port ${frontendPort}:`);
+    log(`     - lsof -ti:${frontendPort} | xargs kill -9`);
+    log(`  2. Change the port in package.json:`);
+    log(`     - Update "config.frontend_port" to a different port`);
     process.exit(1);
   }
   
@@ -204,14 +208,25 @@ async function startAll() {
   if (!dockerRunning) {
     log('⚠️  Docker is not running. Please start Docker Desktop.', colors.yellow);
     log('   The app will start without ReBAC features (using mock).', colors.yellow);
-    
+
     // Start without Docker
     logStep('3/5', 'Skipping Docker setup...');
     logStep('4/5', 'Starting backend with mock ReBAC...');
     logStep('5/5', 'Starting frontend and backend...');
-    
+
+    console.log(`\n${colors.bright}📦 Application URLs:${colors.reset}`);
+    console.log(`   Frontend: ${colors.blue}http://localhost:${frontendPort}${colors.reset}`);
+    console.log(`   Backend:  ${colors.blue}http://localhost:${backendPort}${colors.reset}`);
+    console.log(`   Health:   ${colors.blue}http://localhost:${backendPort}/api/health${colors.reset}\n`);
+
     process.env.USE_MOCK_REBAC = 'true';
-    await runCommand('npm', ['run', 'dev'], { cwd: path.join(__dirname, '..') });
+    const env = {
+      ...process.env,
+      FRONTEND_PORT: frontendPort.toString(),
+      BACKEND_PORT: backendPort.toString(),
+      FRONTEND_URL: `http://localhost:${frontendPort}`
+    };
+    await runCommand('npm', ['run', 'dev'], { cwd: path.join(__dirname, '..'), env });
     return;
   }
   
@@ -228,11 +243,11 @@ async function startAll() {
     log('   Continuing without ReBAC features...', colors.yellow);
     process.env.USE_MOCK_REBAC = 'true';
   }
-  
+
   // Step 4: Wait for Entitlements Agent
   if (!process.env.USE_MOCK_REBAC) {
     logStep('4/5', 'Waiting for Entitlements Agent to be ready...');
-    
+
     const agentReady = await waitForUrl('http://localhost:8181/health', 15, 2000);
     if (agentReady) {
       log('✅ Entitlements Agent is ready', colors.green);
@@ -241,17 +256,24 @@ async function startAll() {
       log('   To fix: Check Docker logs with "npm run docker:logs"', colors.yellow);
     }
   }
-  
+
   // Step 5: Start the application
   logStep('5/5', 'Starting frontend and backend...');
-  
+
   console.log(`\n${colors.bright}📦 Application URLs:${colors.reset}`);
-  console.log(`   Frontend: ${colors.blue}http://localhost:3000${colors.reset}`);
-  console.log(`   Backend:  ${colors.blue}http://localhost:5000${colors.reset}`);
-  console.log(`   Health:   ${colors.blue}http://localhost:5000/api/health${colors.reset}\n`);
-  
+  console.log(`   Frontend: ${colors.blue}http://localhost:${frontendPort}${colors.reset}`);
+  console.log(`   Backend:  ${colors.blue}http://localhost:${backendPort}${colors.reset}`);
+  console.log(`   Health:   ${colors.blue}http://localhost:${backendPort}/api/health${colors.reset}\n`);
+
   // Run the dev command which starts both frontend and backend
-  await runCommand('npm', ['run', 'dev'], { cwd: path.join(__dirname, '..') });
+  // Pass FRONTEND_PORT and BACKEND_PORT separately
+  const env = {
+    ...process.env,
+    FRONTEND_PORT: frontendPort.toString(),
+    BACKEND_PORT: backendPort.toString(),
+    FRONTEND_URL: `http://localhost:${frontendPort}`
+  };
+  await runCommand('npm', ['run', 'dev'], { cwd: path.join(__dirname, '..'), env });
 }
 
 // Handle cleanup on exit
