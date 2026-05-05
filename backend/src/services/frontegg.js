@@ -1,132 +1,134 @@
 const axios = require('axios');
 
+// Frontegg ReBAC relation management goes through the regional API host
+// at `/entitlements/resources/relations/v1/...`, authenticated with a vendor
+// (M2M) token — NOT through the workspace URL with a user token.
+
+function regionalApiHost() {
+  const region = (process.env.FRONTEGG_REGION || '').toLowerCase();
+  if (region === 'us') return 'https://api.us.frontegg.com';
+  if (region === 'au') return 'https://api.au.frontegg.com';
+  if (region === 'ca') return 'https://api.ca.frontegg.com';
+
+  const url = (process.env.FRONTEGG_BASE_URL || '').toLowerCase();
+  if (url.includes('.us.')) return 'https://api.us.frontegg.com';
+  if (url.includes('.au.')) return 'https://api.au.frontegg.com';
+  if (url.includes('.ca.')) return 'https://api.ca.frontegg.com';
+  return 'https://api.frontegg.com';
+}
+
 class FronteggService {
   constructor() {
     this.apiClient = null;
+    this.vendorToken = null;
+    this.vendorTokenExpiresAt = 0;
   }
 
   initialize() {
-    // Create axios instance for Frontegg API
-    // Note: ReBAC operations require user tokens, not API credentials
     this.apiClient = axios.create({
-      baseURL: process.env.FRONTEGG_BASE_URL
+      baseURL: regionalApiHost(),
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  async assignRelation(subjectUserId, documentId, relation, userToken) {
-    if (!userToken) {
-      throw new Error('User token is required for ReBAC operations. ReBAC requires user authentication.');
+  async getVendorToken() {
+    // Cache with a 60s safety margin.
+    if (this.vendorToken && Date.now() < this.vendorTokenExpiresAt - 60_000) {
+      return this.vendorToken;
     }
 
-    const endpoint = '/resources/relations/v1/assign';
-    const fullUrl = `${this.apiClient.defaults.baseURL}${endpoint}`;
-    
-    console.log('🔄 Attempting ReBAC assignment:', {
-      url: fullUrl,
-      userId: subjectUserId,
-      documentId: documentId,
-      relation: relation,
-      tokenPreview: userToken.substring(0, 20) + '...'
-    });
+    const clientId = process.env.FRONTEGG_API_TOKEN_CLIENT_ID;
+    const secret = process.env.FRONTEGG_API_TOKEN_SECRET;
+    if (!clientId || !secret) {
+      throw new Error(
+        'Missing FRONTEGG_API_TOKEN_CLIENT_ID / FRONTEGG_API_TOKEN_SECRET in env. ' +
+        'Required for ReBAC relation management.'
+      );
+    }
+
+    const res = await axios.post(
+      `${regionalApiHost()}/auth/vendor`,
+      { clientId, secret },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    this.vendorToken = res.data.token;
+    // Frontegg vendor tokens are typically valid for 1h; extract from payload.
+    try {
+      const payload = JSON.parse(Buffer.from(this.vendorToken.split('.')[1], 'base64').toString());
+      this.vendorTokenExpiresAt = (payload.exp || 0) * 1000;
+    } catch {
+      this.vendorTokenExpiresAt = Date.now() + 30 * 60_000;
+    }
+    return this.vendorToken;
+  }
+
+  async authHeaders() {
+    const token = await this.getVendorToken();
+    return { Authorization: `Bearer ${token}` };
+  }
+
+  async assignRelation(subjectUserId, documentId, relation) {
+    const headers = await this.authHeaders();
+    const body = {
+      assignments: [{
+        subjectEntityTypeKey: 'user',
+        subjectKey: subjectUserId,
+        relationKey: relation,
+        targetEntityTypeKey: 'document',
+        targetKey: documentId,
+      }],
+    };
 
     try {
-      const response = await this.apiClient.post(endpoint, {
-        assignments: [{
-          subjectEntityTypeKey: 'user',
-          subjectKey: subjectUserId,
-          relationKey: relation,
-          targetEntityTypeKey: 'document',
-          targetKey: documentId
-        }]
-      }, {
-        headers: {
-          'Authorization': `Bearer ${userToken}`
-        }
-      });
-      
-      console.log('✅ ReBAC assignment successful:', {
-        user: subjectUserId,
-        document: documentId,
-        relation: relation
-      });
-      
+      const response = await this.apiClient.post(
+        '/entitlements/resources/relations/v1/assign',
+        body,
+        { headers }
+      );
+      console.log(`✅ ReBAC assign: user=${subjectUserId} ${relation} doc=${documentId}`);
       return response;
     } catch (error) {
-      // Extract trace ID from HTML if present
-      let extractedTraceId = null;
-      if (typeof error.response?.data === 'string' && error.response.data.includes('frontegg-trace-id:')) {
-        const match = error.response.data.match(/Trace ID:\s*([a-f0-9]+)/i);
-        if (match) {
-          extractedTraceId = match[1];
-        }
+      const status = error.response?.status;
+      const data = error.response?.data;
+      console.error(`❌ ReBAC assign failed (${status}):`, JSON.stringify(data));
+      if (status === 404) {
+        throw new Error(
+          'ReBAC schema not provisioned. Run `npm run rebac:setup` from the backend folder.'
+        );
       }
-      
-      // Log all response headers
-      console.error('❌ ReBAC assignment failed:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        traceId: extractedTraceId,
-        allResponseHeaders: error.response?.headers || {}
-      });
-      
-      if (extractedTraceId) {
-        console.log(`📍 Frontegg Trace ID: ${extractedTraceId}`);
-      }
-      
-      if (error.response?.status === 403) {
-        const errorMessage = extractedTraceId 
-          ? `ReBAC Assignment Failed (403): The user token doesn't have permission to create associations. Trace ID: ${extractedTraceId}`
-          : `ReBAC Assignment Failed (403): The user token doesn't have permission to create associations.`;
-        
-        const enhancedError = new Error(errorMessage);
-        enhancedError.originalError = error;
-        enhancedError.traceId = extractedTraceId;
-        enhancedError.responseHeaders = error.response?.headers;
-        throw enhancedError;
-      }
-      if (error.response?.status === 404) {
-        const enhancedError = new Error(`ReBAC Not Found (404): Ensure ReBAC is enabled and configured in Frontegg Portal → [Environment] → Entitlements → ReBAC`);
-        enhancedError.originalError = error;
-        throw enhancedError;
-      }
-      if (error.response?.status === 401) {
-        const enhancedError = new Error(`Authentication Failed (401): The user token is invalid or expired.`);
-        enhancedError.originalError = error;
-        throw enhancedError;
+      if (status === 401 || status === 403) {
+        throw new Error(
+          'ReBAC API auth failed. Check FRONTEGG_API_TOKEN_CLIENT_ID / FRONTEGG_API_TOKEN_SECRET.'
+        );
       }
       throw error;
     }
   }
 
   async unassignRelation(subjectUserId, documentId, relation) {
-    try {
-      const response = await this.apiClient.post('/resources/relations/v1/unassign', {
-        assignments: [{
-          subjectEntityTypeKey: 'user',
-          subjectKey: subjectUserId,
-          relationKey: relation,
-          targetEntityTypeKey: 'document',
-          targetKey: documentId
-        }]
-      });
-      return response;
-    } catch (error) {
-      console.error('Error unassigning relation:', error);
-      if (error.response?.status === 403 || error.response?.status === 404) {
-        const enhancedError = new Error(`ReBAC Error: ${error.message}. Configure ReBAC in Frontegg Portal → [Environment] → Entitlements → ReBAC`);
-        enhancedError.originalError = error;
-        throw enhancedError;
-      }
-      throw error;
-    }
+    const headers = await this.authHeaders();
+    const body = {
+      assignments: [{
+        subjectEntityTypeKey: 'user',
+        subjectKey: subjectUserId,
+        relationKey: relation,
+        targetEntityTypeKey: 'document',
+        targetKey: documentId,
+      }],
+    };
+    return this.apiClient.post(
+      '/entitlements/resources/relations/v1/unassign',
+      body,
+      { headers }
+    );
   }
 
-  async assignOwner(ownerId, documentId, userToken) {
-    return this.assignRelation(ownerId, documentId, 'owner', userToken);
+  // Kept signature compatible with existing callers (userToken arg ignored).
+  async assignOwner(ownerId, documentId, _userTokenIgnored) {
+    return this.assignRelation(ownerId, documentId, 'owner');
   }
 
   async shareDocument(documentId, targetUserId, permission) {
-    // permission should be 'viewer' or 'editor'
     if (!['viewer', 'editor'].includes(permission)) {
       throw new Error('Invalid permission. Must be "viewer" or "editor"');
     }
@@ -137,7 +139,6 @@ class FronteggService {
     return this.unassignRelation(targetUserId, documentId, permission);
   }
 
-  // Helper to revoke all permissions for a user on a document
   async revokeAllAccess(documentId, targetUserId) {
     const results = [];
     for (const relation of ['viewer', 'editor']) {
@@ -149,27 +150,6 @@ class FronteggService {
       }
     }
     return results;
-  }
-
-  // Batch operations for performance
-  async assignMultipleRelations(assignments) {
-    try {
-      const formattedAssignments = assignments.map(a => ({
-        subjectEntityTypeKey: 'user',
-        subjectKey: a.userId,
-        relationKey: a.relation,
-        targetEntityTypeKey: 'document',
-        targetKey: a.documentId
-      }));
-
-      const response = await this.apiClient.post('/resources/relations/v1/assign', {
-        assignments: formattedAssignments
-      });
-      return response;
-    } catch (error) {
-      console.error('Error assigning multiple relations:', error);
-      throw error;
-    }
   }
 }
 

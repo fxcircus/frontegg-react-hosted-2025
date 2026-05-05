@@ -125,43 +125,11 @@ FRONTEND_URL=http://localhost:3000
 REACT_APP_BACKEND_URL=http://localhost:5000
 ```
 
-### 3. Configure ReBAC in Frontegg Portal
+### 3. Configure ReBAC
 
-**Important**: ReBAC must be enabled in your Frontegg workspace for document permissions to work. 
-Learn more: [ReBAC Documentation](https://developers.frontegg.com/guides/authorization/rebac)
-
-1. Log into your [Frontegg Portal](https://portal.frontegg.com)
-2. Navigate to: **[ENVIRONMENT]** → **Entitlements** → **ReBAC**
-3. Click **"Configure ReBAC"** or **"Add Configuration"**
-4. Create the following configuration:
-
-#### Entity Configuration:
-1. **Entity Key**: `document`
-2. **Entity Name (Display)**: `Document`
-
-#### Relations (for document entity):
-Add these relations one by one:
-- **Relation Key**: `owner` | **Display Name**: `Owner`
-- **Relation Key**: `editor` | **Display Name**: `Editor`
-- **Relation Key**: `viewer` | **Display Name**: `Viewer`
-
-#### Actions (for document entity):
-Add these actions with their allowed relations:
-1. **Action Key**: `read` | **Display Name**: `Read`
-   - **Allowed Relations**: `viewer`, `editor`, `owner`
-2. **Action Key**: `write` | **Display Name**: `Write`
-   - **Allowed Relations**: `editor`, `owner`
-3. **Action Key**: `delete` | **Display Name**: `Delete`
-   - **Allowed Relations**: `owner`
-4. **Action Key**: `share` | **Display Name**: `Share`
-   - **Allowed Relations**: `owner`
-
-5. Click **Save** to apply the configuration
-
-**Troubleshooting ReBAC Setup**:
-- If you see "403 Forbidden" errors, check that ReBAC is configured correctly
-- The error message will indicate if ReBAC is not enabled: "ReBAC assignment failed (is ReBAC enabled in Frontegg?)"
-- Ensure the Entitlements Agent is running (`docker ps` should show `frontegg-entitlements-agent`)
+ReBAC has its own setup (entity types, relations, actions) and a recommended
+demo flow. See **[REBAC.md](REBAC.md)** for the dedicated guide, including
+the automated `npm run rebac:setup` script and the demo walkthrough.
 
 ### 4. Start the Application
 
@@ -205,27 +173,8 @@ The app features a modern sidebar navigation with the following sections:
 
 ### Using the ReBAC Demo
 
-1. **Login** with your Frontegg credentials
-2. Navigate to **Documents (ReBAC)** in the sidebar
-3. **Demo Controls**:
-   - Click **"Seed Demo Documents"** to initialize the database with 5 test documents (doc-001 through doc-005)
-   - This deletes all existing documents and creates fresh test data
-   - All seeded documents are initially owned by you
-4. **Two-Column View**:
-   - **Left Column**: Shows ALL documents in the database (bypasses permissions) with their IDs
-   - **Middle Column**: Shows only documents you have access to based on your permissions
-   - **Right Panel**: Shows details of the selected document
-5. **Share documents** with other users:
-   - Click the share icon (🔗) on a document you own
-   - Enter the user's email or ID
-   - Choose permission level (viewer or editor)
-6. **Test permissions**:
-   - Log in as different users to see how the accessible documents list changes
-   - Watch the backend console for `[ReBAC]` logs showing permission checks
-   - Use document IDs (doc-001, etc.) to create associations in Frontegg Portal
-7. **Delete All Documents** button removes all documents for a clean slate
-
-**Note**: Frontegg's ReBAC does not allow users to create new documents through the UI - only read existing ones. Use the "Seed Demo Documents" button to populate test data.
+See **[REBAC.md](REBAC.md)** for the full walkthrough and a ~3 minute demo
+script you can present from.
 
 ### Using the Backend SDK Demo (Pokemon Game)
 
@@ -242,48 +191,12 @@ The app features a modern sidebar navigation with the following sections:
    - Review `backend/src/middleware/permissions.js` for permission checks
    - See API documentation in `docs/POKEMON_API.md`
 
-## ReBAC Permission Model
+## ReBAC
 
-### Relationships
-- **Owner**: Full control (read, write, delete, share)
-- **Editor**: Can read and modify content
-- **Viewer**: Read-only access
-
-### Permission Checks
-The backend validates permissions on every request using Frontegg's Entitlements Agent:
-
-```javascript
-// Example permission check
-const canRead = await e10sClient.isEntitledTo(
-  { entityType: 'user', key: userId },
-  { 
-    type: RequestContextType.Entity,
-    entityType: 'document',
-    key: documentId,
-    action: 'read'
-  }
-);
-```
+The full ReBAC permission model, demo script, and API endpoints are
+documented in **[REBAC.md](REBAC.md)**.
 
 ## API Endpoints
-
-### Document Management
-- `POST /api/documents` - Create new document
-- `GET /api/documents` - List accessible documents
-- `GET /api/documents/:id` - Get specific document
-- `PUT /api/documents/:id` - Update document (requires write)
-- `DELETE /api/documents/:id` - Delete document (requires owner)
-- `POST /api/documents/:id/share` - Share document (requires owner)
-- `DELETE /api/documents/:id/share/:userId` - Revoke access
-
-### Permission Checking
-- `POST /api/permissions/check` - Check specific permission
-- `POST /api/permissions/check-all` - Check permissions for all documents
-
-### Admin/Demo Endpoints (bypass permissions)
-- `GET /api/documents/admin/all` - List ALL documents in database
-- `DELETE /api/documents/admin/all` - Delete all documents
-- `POST /api/documents/admin/seed` - Seed demo documents with predictable IDs
 
 ### Pokemon Backend SDK Demo Endpoints
 
@@ -301,20 +214,8 @@ This demo is prepared for Frontegg's upcoming hierarchical permissions:
 
 ## Troubleshooting
 
-### Entitlements Agent Issues
-```bash
-# Check agent logs
-npm run docker:logs
-
-# Restart services
-npm run docker:down
-npm run docker:up
-```
-
-### Permission Denied Errors
-1. Verify ReBAC configuration in Frontegg Portal
-2. Check that Entitlements Agent is running
-3. Ensure user relationships are properly assigned
+> ReBAC-specific issues (agent down, MISSING_RELATION, bundle propagation)
+> are covered in **[REBAC.md → Troubleshooting](REBAC.md#troubleshooting)**.
 
 ### Database Issues
 - SQLite database is stored as `backend/database.sqlite`
@@ -357,14 +258,8 @@ npm start              # Start production server
 
 ## Common Issues & Solutions
 
-### ReBAC Not Working
-1. **Error**: "403 Forbidden" or "ReBAC assignment failed"
-   - **Solution**: Configure ReBAC in Frontegg Portal (see section 3)
-   - **Check**: Portal → Entitlements → ReBAC → Ensure configuration exists
-
-2. **Error**: "Cannot connect to Entitlements Agent"
-   - **Solution**: Ensure Docker is running and `npm run docker:up` succeeded
-   - **Check**: Run `docker ps` to verify container is running
+> ReBAC-specific errors (403, MISSING_RELATION, agent connection refused)
+> are covered in **[REBAC.md → Troubleshooting](REBAC.md#troubleshooting)**.
 
 ### Authentication Issues
 1. **Error**: "No token provided" or "Invalid token"

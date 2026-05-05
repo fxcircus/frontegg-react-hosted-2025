@@ -100,22 +100,20 @@ const checkPermission = (action) => {
 
 // Helper function to check if user can perform action on document
 const canUserAccessDocument = async (userId, documentId, action) => {
-  // If ReBAC is not available, use fallback logic
+  // If ReBAC is not available, fall back to ownership-only access for ALL
+  // actions (including read). Granting read to everyone hid the case where
+  // the agent was up but no associations existed — the demo looked like it
+  // worked when ReBAC was actually doing nothing.
   if (!isRebacAvailable || !e10sClient) {
-    // In fallback mode, check ownership for write/delete/share actions
-    if (action === 'write' || action === 'delete' || action === 'share') {
-      const Document = require('../models/document');
-      try {
-        const doc = await Document.findByPk(documentId);
-        if (!doc) return false;
-        return doc.ownerId === userId;
-      } catch (error) {
-        console.error('Fallback permission check error:', error);
-        return false;
-      }
+    const Document = require('../models/document');
+    try {
+      const doc = await Document.findByPk(documentId);
+      if (!doc) return false;
+      return doc.ownerId === userId;
+    } catch (error) {
+      console.error('Fallback permission check error:', error);
+      return false;
     }
-    // For read action, allow all authenticated users in fallback mode
-    return action === 'read';
   }
 
   try {
@@ -134,51 +132,75 @@ const canUserAccessDocument = async (userId, documentId, action) => {
       }
     );
 
-    // Handle various response formats from the entitlements client
-    let isEntitled = false;
-    
+    // Distinguish three cases from the e10s client:
+    //   - explicit true/false  -> trust the agent
+    //   - object with result/entitled set -> trust the agent
+    //   - empty / undefined response -> agent has NO data for this entity
+    //     (e.g. bundle hasn't been regenerated since the schema was created)
+    //     -> fall back to local ownership instead of silently denying
+    let isEntitled = null; // null = "no decision"
+    let justification = null;
+
     if (result === true || result === false) {
       isEntitled = result;
     } else if (result && typeof result === 'object') {
-      // Check for result property
-      if ('result' in result) {
-        isEntitled = result.result || false;
-      }
-      // Check for entitled property
-      else if ('entitled' in result) {
-        isEntitled = result.entitled || false;
+      if ('justification' in result) justification = result.justification;
+      if ('result' in result && typeof result.result === 'boolean') {
+        isEntitled = result.result;
+      } else if ('entitled' in result && typeof result.entitled === 'boolean') {
+        isEntitled = result.entitled;
       }
     }
-    
-    // If we couldn't determine the result format, log warning
-    if (!result && result !== false) {
-      console.warn('Unexpected response format from Entitlements Client:', result);
+
+    // MISSING_RELATION = the agent's bundle doesn't have the relation assignments
+    // for this entity yet (typical during first-time relation propagation).
+    // Treat it like "no decision" and fall back to ownership.
+    if (isEntitled === false && justification === 'MISSING_RELATION') {
+      console.warn(`[ReBAC] Agent says MISSING_RELATION for doc=${documentId} (relations not in bundle yet) — falling back to ownership`);
+      isEntitled = null;
     }
-    
-    console.log(`[ReBAC] Permission result: ${isEntitled ? 'GRANTED' : 'DENIED'}`);
-    return isEntitled;
-  } catch (error) {
-    // Handle the specific monitoring error
-    if (error.message && error.message.includes('Cannot read properties of undefined')) {
-      console.error('Entitlements Client error - likely version mismatch or agent not ready:', error.message);
-    } else {
-      console.error('ReBAC check failed:', error.message || error);
-    }
-    
-    // Fall back to ownership check on error
-    if (action === 'write' || action === 'delete' || action === 'share') {
+
+    if (isEntitled === null) {
+      console.warn('[ReBAC] No decision from agent — falling back to ownership');
       const Document = require('../models/document');
       try {
         const doc = await Document.findByPk(documentId);
-        if (!doc) return false;
-        return doc.ownerId === userId;
+        if (!doc) {
+          console.log(`[ReBAC] Fallback DENIED (doc ${documentId} not in local DB)`);
+          return false;
+        }
+        const owns = doc.ownerId === userId;
+        console.log(`[ReBAC] Fallback ${owns ? 'GRANTED' : 'DENIED'} (ownership: ${owns ? 'match' : `mismatch — doc.ownerId=${doc.ownerId}`})`);
+        return owns;
       } catch (fallbackError) {
-        console.error('Fallback check also failed:', fallbackError);
+        console.error('[ReBAC] Fallback check also failed:', fallbackError.message);
         return false;
       }
     }
-    // For read action in fallback mode, allow access
-    return action === 'read';
+
+    console.log(`[ReBAC] Permission result: ${isEntitled ? 'GRANTED' : 'DENIED'}`);
+    return isEntitled;
+  } catch (error) {
+    // Compact one-line error — full axios objects are useless noise in logs.
+    const reason = error.code === 'ECONNREFUSED'
+      ? 'agent not reachable'
+      : (error.message || String(error)).split('\n')[0].slice(0, 200);
+    console.warn(`[ReBAC] Check threw (${reason}) — falling back to ownership`);
+
+    const Document = require('../models/document');
+    try {
+      const doc = await Document.findByPk(documentId);
+      if (!doc) {
+        console.log(`[ReBAC] Fallback DENIED (doc ${documentId} not in local DB)`);
+        return false;
+      }
+      const owns = doc.ownerId === userId;
+      console.log(`[ReBAC] Fallback ${owns ? 'GRANTED' : 'DENIED'} (ownership: ${doc.ownerId === userId ? 'match' : `mismatch — doc.ownerId=${doc.ownerId}`})`);
+      return owns;
+    } catch (fallbackError) {
+      console.error('[ReBAC] Fallback check also failed:', fallbackError.message);
+      return false;
+    }
   }
 };
 
