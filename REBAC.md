@@ -5,6 +5,8 @@ relationships between users and resources rather than assigning static roles.
 This guide covers how the demo is built, how to set it up, and a short
 walkthrough script you can use when presenting it.
 
+> 📚 **Frontegg ReBAC documentation:** <https://developers.frontegg.com/guides/authorization/rebac>
+>
 > **Looking for general setup?** See the main [README](README.md). This file
 > only covers ReBAC-specific configuration and demo flow.
 
